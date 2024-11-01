@@ -12,9 +12,10 @@
 <body>
   <div class="app">
     <header>  
-      <div >
-        <img src="{{ asset('public/images/logo.png') }}" alt="Logo" class="logo">
-        <a class="logo" href="#"></a>
+      <div class="logo">
+        <a href="{{ url('/home') }}">        
+          <img src="{{ asset('public/images/logo.png') }}" alt="Logo" class="logo">
+        </a>
       </div>
       <div class="menu">
         <ul> 
@@ -25,7 +26,7 @@
     </div>
       <div class = "others">
         <li> <input placeholder="Tìm kiếm" type="text"> <i class="fas fa-search"></i></li>
-        <li> <a class="fa fa-user" href=""></a></li>
+        <li> <a class="fa fa-user" href="{{ url('/login') }}"></a></li>
         <li> <a class="fa fa-shopping-bag" href=""></a></li>
       </div>
     </header>
