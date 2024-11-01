@@ -90,16 +90,16 @@ class ProductController extends Controller{
         return redirect()->route('admin.all_product')->with('success', 'Product deleted successfully.');
     }
 
+    public function showProductWithCategory($category_id)
+    {
+        // products để lấy tất cả sản phẩm có có cat_id trùng
+        $products = Product::where('category_id', $category_id)->get();
+        //  categories để lấy tất cả danh mục đổ ra menu
+        $categories = Category::all(); 
+        // category để lấy danh mục hiện tại 
+        $category = Category::find($category_id);
 
-    public function showProductDetail(){
-        // Lấy danh sách category có status là 'YES'
-        $categories = Category::where('category_status', 'YES')->get();
-
-        // Trả về view cùng với danh sách categories
-        return view('pages.product_detail', compact('categories'));
-    }
-
-    public function index(){
-        return view ('pages.product_detail');
+        // Trả về với danh sách sản phẩm
+        return view('pages.product', compact('products','categories'));
     }
 }
