@@ -1,0 +1,138 @@
+input[type="text"],
+input[type="email"],
+input[type="number"],
+textarea {
+    width: 80%; /* Chiếm toàn bộ chiều rộng */
+    padding: 10px; /* Thêm khoảng đệm */
+    border: 2px solid #ccc; /* Đường viền nhẹ */
+    border-radius: 5px; /* Bo góc */
+    margin-left: 45px; /* Khoảng cách dưới các trường */
+}
+
+/* Đối với Textarea */
+textarea {
+    height: 150px; /* Chiều cao cho textarea */
+}
+.form-group {
+    display: flex; /* Sử dụng Flexbox */
+    justify-content: space-between; /* Căn giữa các phần tử */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin-bottom: 15px; /* Khoảng cách dưới mỗi nhóm */
+}
+
+.form-group label {
+    flex: 1; /* Chiếm 1 phần trong bố cục Flex */
+    margin-right: 20px; /* Khoảng cách giữa label và input */
+    text-align: left; /* Căn phải cho nhãn */
+}
+
+.form-control {
+    flex: 2; /* Chiếm 2 phần trong bố cục Flex */
+    padding: 10px; /* Thêm khoảng đệm */
+    border: 1px solid #ccc; /* Đường viền nhẹ */
+    border-radius: 5px; /* Bo góc */   
+}
+.button-container {
+    display: flex; /* Sử dụng Flexbox */
+    justify-content: center; /* Căn giữa */
+    margin-top: 20px; /* Khoảng cách trên */
+}
+
+
+
+/* Căn giữa tiêu đề */
+.card-header {
+    text-align: center;
+    background-color:#33CCFF;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    padding: 5px; /* Thêm khoảng đệm */
+    color: white; /* Màu chữ trắng */
+    font-size: 1.5em; /* Tăng kích thước chữ */
+}
+
+/* Container chính */
+.container-ct {
+    margin: 80px auto; /* Tự động căn giữa */
+    max-width: 1200px; /* Đặt chiều rộng tối đa */
+    padding: 20px; /* Thêm khoảng đệm */
+    background-color: #f9f9f9; /* Màu nền nhẹ */
+    border-radius: 10px; /* Bo góc */
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Card */
+.card {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px; /* Khoảng cách giữa các thẻ */
+}
+
+/* Bảng */
+.card-body > .table {
+    border: 1px solid #ddd; /* Đổi màu biên bảng */
+    text-align: center;
+    width: 100%; /* Đảm bảo bảng chiếm toàn bộ chiều rộng */
+}
+
+/* Biên bảng */
+th, td {
+    border: 1px solid #ddd; /* Màu biên nhẹ */
+    padding: 10px; /* Thêm khoảng đệm cho ô */
+}
+
+/* Nút thêm sản phẩm */
+.btn-add {
+    margin-bottom: 15px;
+    background-color: rgb(42, 102, 161);
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 10px; /* Thêm khoảng đệm */
+    color: white; /* Màu chữ trắng */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+}
+
+.btn-add:hover {
+    background-color: rgb(30, 75, 120); /* Màu khi hover */
+}
+.btn-cancel {
+    margin-left: 5px;
+    margin-bottom: 15px;
+    background-color: rgb(187, 61, 61);
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 10px; /* Thêm khoảng đệm */
+    color: white; /* Màu chữ trắng */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+}
+
+.btn-cancel:hover {
+    background-color: rgb(148, 24, 24); /* Màu khi hover */
+}
+
+/* Hiệu ứng cho bảng */
+.card-body > .table tr:hover {
+    background-color: rgba(200, 200, 200, 0.5); /* Màu nền khi hover */
+}
+
+  .form-group{
+    border: 1px solid black;
+    padding: 10px;
+  }
+  .btn-sb{
+    margin-top: 5px;
+    color: #fff;
+    background-color: rgb(39, 182, 39);
+    border-radius: 5px;
+    font-size: 15px;
+    width: 100px;
+  }
+  /* sửa */
+  .btn-up{
+    margin-top: 5px;
+    background-color: rgb(39, 182, 39);
+    border-radius: 5px;
+    font-size: 15px;
+  }
+  

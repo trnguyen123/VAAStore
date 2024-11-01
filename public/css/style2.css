@@ -1,0 +1,47 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa nội dung theo chiều ngang */
+    justify-content: center; /* Căn giữa nội dung theo chiều dọc */
+    height: 100vh; /* Chiều cao 100% trang để căn giữa theo chiều dọc */
+    padding: 40px; /* Thêm khoảng cách bên trong khung */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Tạo shadow cho khung */
+    background-color: #f9f9f9; /* Màu nền nhạt cho wrapper */
+}
+
+.center-logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px; /* Khoảng cách giữa logo và form */
+}
+
+.login-form {
+    width: 100%;
+    max-width: 400px; /* Giới hạn chiều rộng của form */
+    padding: 20px;
+    background-color: #fff; /* Nền trắng cho form */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Tạo shadow nhẹ cho form */
+}
+
+.login-form input[type="username"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-form input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-form input[type="submit"]:hover {
+    background-color: #0056b3; /* Màu xanh dương đậm khi hover */
+}
