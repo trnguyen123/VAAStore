@@ -7,7 +7,7 @@ use App\Http\Controllers\ProductController;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/home', [HomeController::class, 'index']);
+Route::get('/home', [HomeController::class, 'index']) ->name ('home');
 Route::get('/login', [HomeController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [HomeController::class, 'login'])->name('login.post');
 Route::get('/signup', [HomeController::class, 'showSignupForm'])->name('signup');

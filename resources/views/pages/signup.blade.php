@@ -18,6 +18,10 @@
             <form action="{{ route('signup.post') }}" method="post">
                 @csrf 
                 <div class="input-group">
+                    <label for="full_name">Họ và tên</label>
+                    <input type="text" id="full_name" name="full_name" required>
+                </div>
+                <div class="input-group">
                     <label for="register-username">Username</label>
                     <input type="text" id="register-username" name="username" required>
                 </div>
@@ -41,7 +45,7 @@
             <div class="alert alert-danger">
                 <ul>
                     @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                        <p>{{ $error }}</p>
                     @endforeach
                 </ul>
             </div>

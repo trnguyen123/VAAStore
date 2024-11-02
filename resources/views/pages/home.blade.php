@@ -15,23 +15,42 @@
   <div id="app">
     <header>  
       <div class="logo">
-        <a href="{{ url('/home') }}">        
-          <img src="{{ asset('public/images/logo.png') }}" alt="Logo" class="logo">
-        </a>
+          <a href="{{ url('/home') }}">        
+              <img src="{{ asset('public/images/logo.png') }}" alt="Logo" class="logo">
+          </a>
       </div>
       <div class="menu">
-        <ul> 
-            @foreach ($categories as $category)
-              <li><a href="{{ route('products.category', ['category_id' => $category->category_id]) }}">{{ $category->category_name }}</a></li>
-            @endforeach
-        </ul>
-    </div>
-      <div class = "others">
-        <li> <input placeholder="Tìm kiếm" type="text"> <i class="fas fa-search"></i></li>
-        <li> <a class="fa fa-user" href="{{ url('/login') }}"></a></li>
-        <li> <a class="fa fa-shopping-bag" href=""></a></li>
+          <ul> 
+              @foreach ($categories as $category)
+                  <li><a href="{{ route('products.category', ['category_id' => $category->category_id]) }}">{{ $category->category_name }}</a></li>
+              @endforeach
+          </ul>
+      </div>
+      <div class="others">
+          <li> 
+              <input placeholder="Tìm kiếm" type="text"> 
+              <i class="fas fa-search"></i>
+          </li>
+           <!-- Auth check để kiểm tra xem đã đăng nhập chưa -->
+          @if(Auth::check())
+              <li> 
+                  <span class="user-name">{{ Auth::user()->full_name }}</span>
+              </li>
+              <li> 
+                  <a class="fa fa-sign-out-alt" href="{{ url('/logout') }}"></a> 
+              </li>
+          @else
+              <li> 
+                  <a class="fa fa-user" href="{{ url('/login') }}"></a> 
+              </li>
+          @endif
+  
+          <li> 
+              <a class="fa fa-shopping-bag" href=""></a>
+          </li>
       </div>
     </header>
+  
 
     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
       <div class="carousel-indicators">

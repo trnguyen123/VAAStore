@@ -36,6 +36,7 @@ class HomeController extends Controller
         return back()->withErrors([
             'username' ,'password'=> 'Thông tin đăng nhập không chính xác.',
         ]);
+        return redirect()->route('home')->with('success', 'Đăng nhập thành công!');
     }
 
     public function showSignupForm(){
@@ -45,6 +46,7 @@ class HomeController extends Controller
     public function signup(Request $request) {
         // Xác thực dữ liệu đầu vào
         $validator = Validator::make($request->all(), [
+            'full_name' => 'required|string|max:255|',
             'username' => 'required|string|max:255|unique:customers',
             'email' => 'required|string|email|max:100|unique:customers',
             'password' => 'required|string|min:3|confirmed', // 'confirmed' yêu cầu có trường 'password_confirmation' trong form đăng kí
@@ -58,6 +60,7 @@ class HomeController extends Controller
 
         // Thêm dữ liệu vào customers
         $customer = new Customer();
+        $customer->full_name = $request->full_name;
         $customer->username = $request->username;
         $customer->email = $request->email;
         $customer->password = Hash::make($request->password); 

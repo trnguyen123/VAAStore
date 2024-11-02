@@ -192,3 +192,8 @@ p {
 .prev:hover, .next:hover {
     color: #ffffff; /* Change color on hover */
 }
+.user-name {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
