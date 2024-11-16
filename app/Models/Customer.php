@@ -4,7 +4,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Authenticatable
+class Customer extends Authenticatable 
 {
     protected $table = 'customers'; // tên bảng
     public $timestamps = false; // Tắt timestamps

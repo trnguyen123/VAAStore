@@ -9,6 +9,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <link href="{{ asset('public/css/home.css') }}" rel='stylesheet' type='text/css' />
+  <script src="{{ asset('public/js/home.js') }}" defer></script>
+
 </head>
 
 <body>
@@ -20,37 +22,47 @@
           </a>
       </div>
       <div class="menu">
-          <ul> 
-              @foreach ($categories as $category)
-                  <li><a href="{{ route('products.category', ['category_id' => $category->category_id]) }}">{{ $category->category_name }}</a></li>
-              @endforeach
-          </ul>
-      </div>
+        <ul> 
+            @foreach ($categories as $category)
+                <li><a href="{{ route('products.category', ['category_id' => $category->category_id]) }}">{{ $category->category_name }}</a></li>
+            @endforeach
+            <li><a href="{{ route('allProduct') }}">ALL PRODUCTS</a></li>
+        </ul>
+    </div>
+    
       <div class="others">
-          <li> 
-              <input placeholder="Tìm kiếm" type="text"> 
-              <i class="fas fa-search"></i>
-          </li>
-           <!-- Auth check để kiểm tra xem đã đăng nhập chưa -->
-          @if(Auth::check())
-              <li> 
-                  <span class="user-name">{{ Auth::user()->full_name }}</span>
-              </li>
-              <li> 
-                  <a class="fa fa-sign-out-alt" href="{{ url('/logout') }}"></a> 
-              </li>
-          @else
-              <li> 
-                  <a class="fa fa-user" href="{{ url('/login') }}"></a> 
-              </li>
-          @endif
-  
-          <li> 
-              <a class="fa fa-shopping-bag" href=""></a>
-          </li>
-      </div>
+        <li class="search">
+            <input placeholder="Tìm kiếm" type="text" id="search-input">
+            <i class="fas fa-search"></i>
+        </li>
+    
+        @if(session('full_name'))
+        <li class="dropdown">
+            <p class="dropdown-toggle">{{ session('full_name') }}</p>
+            <div class="dropdown-content">
+              <a href="{{ route('profile') }}">Thông tin cá nhân</a>
+              <a href="">Đổi mật khẩu</a>
+              <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit">Đăng xuất</button>
+                </form>
+            </div>
+        </li>
+        @else
+            <li>
+                <a class="fa fa-user" href="{{ url('/login') }}"></a>
+            </li>
+        @endif
+
+    
+        <li>
+            <a class="fa fa-shopping-bag" href="{{ url('/carts') }}"></a>
+        </li>
+        <li>
+            <a class="fa fa-heart" href="{{ url('/favorites') }}"></a> 
+        </li>
+    </div>
     </header>
-  
 
     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
       <div class="carousel-indicators">
@@ -86,70 +98,28 @@
         <span class="visually-hidden">Next</span>
       </button>
     </div>
-
+    @foreach ($categories as $category)
     <div class="container mt-5">
-      <h2 class="text-center">NEW ARRIVAL</h2>
+      <h2 class="text-center">{{ $category->category_name }}</h2>
       <div class="product-slider">
         <div class="product-wrapper">
           <div class="row">
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/blazer-ke-serge.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small>
-                    <button class="btn btn-cart float-end">
-                      <i class="fa fa-shopping-bag"></i>
-                    </button>
-                  </p>
+            @foreach ($category->products as $product)
+              <div class="col-md-3">
+                <div class="product-card">
+                  <span class="new-label">NEW</span>
+                  <a href="{{ route('products.detail', ['product_id' => $product->product_id]) }}" class="product-card-link">
+                    <img src="{{ asset('public/' . $product->product_img) }}" class="img-fluid rounded-start" alt="...">
+                    <p class="product-name mt-2">{{ $product->product_name }}</p>
+                  </a>
+                  <p class="product-price">{{ number_format($product->product_price, 0, ',', '.') }}₫</p>
+                  <div class="mt-2">
+                    <button class="btn btn-outline-secondary"><i class="far fa-heart"></i></button>
+                    <button class="btn btn-dark"><i class="fas fa-shopping-bag"></i></button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/chan-vay-but-chi-lam-cobalt.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small>
-                    <button class="btn btn-cart float-end">
-                      <i class="fa fa-shopping-bag"></i>
-                    </button>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/chan-vay-lua-xoe.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small></p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/dam-lua-xoe-tay-dai.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small></p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/gile-ke-serge.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small></p>
-                </div>
-              </div>
-            </div>
+            @endforeach
           </div>
         </div>
         <button class="prev btn btn-secondary">
@@ -160,195 +130,13 @@
         </button>
       </div>
       <div class="text-center">
-        <button class="btn btn-dark mt-3">Xem tất cả</button>
-      </div>
-    </div><hr class="short-line">
-
-    <div class="container mt-5">
-      <h2 class="text-center">NEW ARRIVAL</h2>
-      <div class="product-slider">
-        <div class="product-wrapper">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/blazer-ke-serge.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small>
-                    <button class="btn btn-cart float-end">
-                      <i class="fa fa-shopping-bag"></i>
-                    </button>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/chan-vay-but-chi-lam-cobalt.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small>
-                    <button class="btn btn-cart float-end">
-                      <i class="fa fa-shopping-bag"></i>
-                    </button>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/chan-vay-lua-xoe.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small></p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/dam-lua-xoe-tay-dai.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small></p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/gile-ke-serge.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button class="prev btn btn-secondary">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="next btn btn-secondary">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-      <div class="text-center">
-        <button class="btn btn-dark mt-3">Xem tất cả</button>
-      </div>
-    </div><hr class="short-line">
-
-    <div class="container mt-5">
-      <h2 class="text-center">NEW ARRIVAL</h2>
-      <div class="product-slider">
-        <div class="product-wrapper">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/blazer-ke-serge.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small>
-                    <button class="btn btn-cart float-end">
-                      <i class="fa fa-shopping-bag"></i>
-                    </button>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/chan-vay-but-chi-lam-cobalt.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small>
-                    <button class="btn btn-cart float-end">
-                      <i class="fa fa-shopping-bag"></i>
-                    </button>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/chan-vay-lua-xoe.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small></p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/dam-lua-xoe-tay-dai.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small></p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <img src="public/images/gile-ke-serge.jpg" class="img-fluid rounded-start" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Áo Gile Ke Serge</h5>
-                  <p class="card-text">Mô tả sản phẩm ngắn gọn.</p>
-                  <p class="card-text"><small class="text-muted">Giá: 1.290.000₫</small></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button class="prev btn btn-secondary">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="next btn btn-secondary">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-      <div class="text-center">
-        <button class="btn btn-dark mt-3">Xem tất cả</button>
+        <a href="{{ route('products.category', ['category_id' => $category->category_id]) }}" class="btn btn-dark mt-3">Xem tất cả</a>
       </div>
     </div><br>
+    @endforeach
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.46/dist/vue.global.prod.js"></script>
     
-
-      <script>
-      const productWrapper = document.querySelector('.product-wrapper');
-      const prevButton = document.querySelector('.prev');
-      const nextButton = document.querySelector('.next');
-  
-      let currentIndex = 0;
-      const itemsPerPage = 4; // Adjust this according to your layout
-      const totalItems = document.querySelectorAll('.product-wrapper .col-md-3').length;
-  
-      function updateSlider() {
-        const offset = -currentIndex * (100 / itemsPerPage); // Calculate the offset based on currentIndex
-        productWrapper.style.transform = `translateX(${offset}%)`; // Move the slider
-      }
-
-      nextButton.addEventListener('click', () => {
-        if (currentIndex < Math.ceil(totalItems / itemsPerPage) - 1) {
-          currentIndex++;
-          updateSlider();
-        }
-      });
-
-      prevButton.addEventListener('click', () => {
-        if (currentIndex > 0) {
-          currentIndex--;
-          updateSlider();
-        }
-      });
-    </script>
+      
 
   </div>
 

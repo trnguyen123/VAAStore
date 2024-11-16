@@ -19,15 +19,16 @@
             <form action="{{ route('login.post') }}" method="POST">
                 @csrf
                 <div class="input-group">
-                    <label for="login-username">Username</label>
+                    <label for="login-username">Tài khoản</label>
                     <input type="text" id="login-username" name="username" required>
                 </div>
                 <div class="input-group">
-                    <label for="login-password">Password</label>
+                    <label for="login-password">Mật khẩu</label>
                     <input type="password" id="login-password" name="password" required>
                 </div>
-                <button type="submit">Login</button>
-                <p>Don't have an account? <a href="{{ url('/signup') }}" id="show-register">Register here</a></p>
+                <button type="submit">Đăng nhập</button>
+                <p><a href="">Quên mật khẩu?</a></p>
+                <p>Nếu bạn chơi có tài khoản <a href="{{ url('/signup') }}" id="show-register">Đăng kí tại đây</a></p>
             </form>
         </div>
         @if ($errors->any())

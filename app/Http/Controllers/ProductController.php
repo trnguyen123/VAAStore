@@ -8,8 +8,11 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller{
     
+    public function index(){
+        return view('pages.product-detail');
+    }
     public function showAddProductForm(){
-        return view('admin.add_product'); // Hoặc đường dẫn view của bạn
+        return view('admin.add_product'); 
     }
 
     public function add_product(Request $request) {
@@ -22,7 +25,7 @@ class ProductController extends Controller{
             'product_description' => 'required|string',
             'product_amount' => 'required|integer',
             'product_price' => 'required|integer',
-            'image' => 'nullable|image|max:2048', // Kiểm tra ảnh nếu có
+            'image' => 'nullable|image|max:2048', 
         ]);
 
         // Xử lý ảnh (nếu có)
@@ -50,20 +53,16 @@ class ProductController extends Controller{
     }
 
     public function all_product(){
-        // Lấy tất cả sản phẩm từ cơ sở dữ liệu
         $products = Product::all();
-
-        // Trả về view cùng với danh sách sản phẩm
         return view('admin.all_product', compact('products'));
     }
-    public function edit($id)
-    {
+
+    public function edit($id){
         $product = Product::where('product_id', $id)->firstOrFail(); 
         return view('admin.edit_product', compact('product')); 
     }
 
-    public function update(Request $request, $product_id)
-{
+    public function update(Request $request, $product_id){
     $product = Product::where('product_id', $product_id)->firstOrFail();
 
     $product->product_name = $request->input('product_name');
@@ -83,15 +82,13 @@ class ProductController extends Controller{
     return redirect()->route('admin.all_product')->with('success', 'Cập nhật sản phẩm thành công!');
 }
 
-    public function destroy($id)
-    {
+    public function destroy($id){
         $product = Product::findOrFail($id);
         $product->delete();
-        return redirect()->route('admin.all_product')->with('success', 'Product deleted successfully.');
+        return redirect()->route('admin.all_product')->with('success', 'Xóa sản phẩm thành công');
     }
 
-    public function showProductWithCategory($category_id)
-    {
+    public function showProductWithCategory($category_id){
         // products để lấy tất cả sản phẩm có có cat_id trùng
         $products = Product::where('category_id', $category_id)->get();
         //  categories để lấy tất cả danh mục đổ ra menu
@@ -102,4 +99,40 @@ class ProductController extends Controller{
         // Trả về với danh sách sản phẩm
         return view('pages.product', compact('products','categories'));
     }
+    //cần xem lại
+    public function toggleFavorite(Request $request)
+    {
+        // Đảm bảo request có `product_id`
+        if (!$request->has('product_id')) {
+            return response()->json(['error' => 'Product ID is missing'], 400);
+        }
+
+        $product = Product::findOrFail($request->product_id);
+        $product->is_favorited = !$product->is_favorited; // Đổi trạng thái yêu thích
+        $product->save();
+
+        return response()->json(['is_favorited' => $product->is_favorited]);
+    }
+
+    public function showProductDetail($product_id) {
+    // Kiểm tra xem có tồn tại sản phẩm với product_id hay không
+    $product = Product::where('product_id', $product_id)->firstOrFail();
+
+    // Lấy tất cả danh mục sản phẩm
+    $categories = Category::all();
+
+    $relatedProducts = Product::where('category_id', $product->category_id)
+                               ->where('product_id', '!=', $product_id)
+                               ->get();
+
+    // Trả về view với dữ liệu sản phẩm và danh mục
+    return view('pages.product_detail', compact('product', 'categories', 'relatedProducts'));
+    }
+
+    public function allProduct(){
+        $products = Product::all();
+        $categories = Category::all(); 
+        return view('pages.product', compact('products','categories'));
+    }
+
 }

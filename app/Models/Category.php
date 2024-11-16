@@ -15,4 +15,9 @@ class Category extends Model
 
     // Bỏ qua timestamps nếu bảng không có các cột created_at và updated_at
     public $timestamps = false;
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id', 'category_id');
+    }
 }

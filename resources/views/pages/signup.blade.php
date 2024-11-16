@@ -22,7 +22,7 @@
                     <input type="text" id="full_name" name="full_name" required>
                 </div>
                 <div class="input-group">
-                    <label for="register-username">Username</label>
+                    <label for="register-username">Tài khoản</label>
                     <input type="text" id="register-username" name="username" required>
                 </div>
                 <div class="input-group">
@@ -30,11 +30,11 @@
                     <input type="email" id="register-email" name="email" required>
                 </div>
                 <div class="input-group">
-                    <label for="register-password">Password</label>
+                    <label for="register-password">Mật khẩu</label>
                     <input type="password" id="register-password" name="password" required>
                 </div>
                 <div class="input-group">
-                    <label for="register-password_confirmation">Confirm Password</label>
+                    <label for="register-password_confirmation">Xác nhận mật khẩu</label>
                     <input type="password" id="register-password_confirmation" name="password_confirmation" required>
                 </div>
                 <button type="submit">Đăng Ký</button>
