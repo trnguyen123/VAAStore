@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CheckoutController;
 
 
 // Public routes
@@ -29,9 +30,13 @@ Route::get('/products/category/{category_id}', [ProductController::class, 'showP
 Route::get('/product-detail/{product_id}', [ProductController::class, 'showProductDetail'])->name('products.detail');
 Route::get('/products',[ProductController::class,'allProduct']) ->name('allProduct');
 
+// Checkout routes
+Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+
+
 
 // Admin routes
-Route::get('/admin', [AdminController::class, 'dashboard']);
+Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 Route::get('/login/admin', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login/admin', [AdminController::class, 'login'])->name('admin.login.post');
 Route::get('admin/add-product', [ProductController::class, 'showAddProductForm'])->name('admin.show_add_product');

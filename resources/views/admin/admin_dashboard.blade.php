@@ -17,93 +17,102 @@
 <script src="{{ asset('public/js/jquery2.0.3.min.js') }}"></script>
 <script src="{{ asset('public/js/raphael-min.js') }}"></script>
 <script src="{{ asset('public/js/morris.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <section id="container">
-<header class="header">
-	<div class="brand">
-		<a class="logo" href="{{ url('/admin/') }}">
-			<img src="{{ asset('public/images/logo.png') }}" alt="Logo" class="logo-img">
-		</a>
-	</div>	
-</header>
-<aside>
-    <div id="sidebar" class="nav-collapse">
-        <!-- sidebar menu start-->
-        <div class="leftside-navigation">
-            <ul class="sidebar-menu" id="nav-accordion">
-                <li>
-					<a class="" href="{{ url('/admin/') }}">
-                        <i class="fa fa-dashboard"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="sub-menu">
-					<a class="">
-                        <i class="fa fa-book"></i>
-                        <span>Sản phẩm </span>
-                    </a>
-                    <ul class="sub">
-						<li><a href="{{ url('/admin/add-product') }}">Thêm sản phẩm</a></li>
-                    </ul>
-					<ul class="sub">
-						<li><a href="{{ url('/admin/all-product') }}">Xem sản phẩm</a></li>
-                    </ul>
-                </li>
-                <li class="sub-menu">
-                    <a class="">
-						<i class="fa-regular fa-user"></i>
-						<span>Thành viên </span>
-                    </a>
-					<ul class="sub">
-						<li><a href="{{ url('/admin/all-customer') }}">Xem thành viên</a></li>
-                    </ul>
-                </li>
-                <li class="sub-menu">
-					<a class="" href="{{ url('/login/admin') }}">
-						<i class="fa fa-key"></i>
-						<span>Đăng xuất</span>
-					</a>
-				</li>				
-            </ul>    
-		</div>
-    </div>
-</aside>
-<section id="main-content">
-	<div class="wrapper">
-		<h2>Chào mừng bạn đến với trang Admin </h2>
-	</div>
- <!-- footer -->
-		  <div class="footer">
-			<div class="wthree-copyright">
-			  <p>© 2024 VAA Store. All rights reserved | Design by Group 7</a></p>
+	<aside>
+		<div id="sidebar" class="nav-collapse">
+			<!-- sidebar menu start-->
+			<div class="brand">
+				<a class="logo" href="{{ url('/admin/') }}">
+					<img src="{{ asset('public/images/logo.png') }}" alt="Logo" class="logo-img">
+				</a>
 			</div>
-		  </div>
-  <!-- / footer -->
-</section>
-<!--main content end-->
+			<div class="leftside-navigation">
+				<ul class="sidebar-menu" id="nav-accordion">
+					<li>
+						<a class="" href="{{ url('/admin/') }}">
+							<i class="fa fa-dashboard"></i>
+							<span>Dashboard</span>
+						</a>
+					</li>
+					<li class="sub-menu">
+						<a class="">
+							<i class="fa fa-book"></i>
+							<span>Sản phẩm </span>
+						</a>
+						<ul class="sub">
+							<li><a href="{{ url('/admin/add-product') }}">Thêm sản phẩm</a></li>
+						</ul>
+						<ul class="sub">
+							<li><a href="{{ url('/admin/all-product') }}">Xem sản phẩm</a></li>
+						</ul>
+					</li>
+					<li class="sub-menu">
+						<a class="">
+							<i class="fa-regular fa-user"></i>
+							<span>Thành viên </span>
+						</a>
+						<ul class="sub">
+							<li><a href="{{ url('/admin/all-customer') }}">Xem thành viên</a></li>
+						</ul>
+					</li>
+					<li class="sub-menu">
+						<a class="" href="{{ url('/login/admin') }}">
+							<i class="fa fa-key"></i>
+							<span>Đăng xuất</span>
+						</a>
+					</li>				
+				</ul>    
+			</div>
+		</div>
+	</aside>
+	<section id="main-content">
+		<div class="wrapper">
+			<form method="GET" action="{{ route('admin.dashboard') }}">
+				<label for="selected_date">Chọn ngày:</label>
+				<input type="date" id="selected_date" name="selected_date" value="{{ request('selected_date') }}">
+				<button type="submit">Lọc</button>
+			</form>			
+			<canvas id="revenueChart"></canvas>	
+		</div>
+	</section>
 </section>
 <script src="{{ asset('public/js/bootstrap.js') }}"></script>
 <script src="{{ asset('public/js/jquery.dcjqaccordion.2.7.js') }}"></script>
 <script src="{{ asset('public/js/scripts.js') }}"></script>
 <script src="{{ asset('public/js/jquery.slimscroll.js') }}"></script>
 <script src="{{ asset('public/js/jquery.nicescroll.js') }}"></script>
-<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot-chart/excanvas.min.js"></script><![endif]-->
 <script src="{{ asset('public/js/jquery.scrollTo.js') }}"></script>
+
 <!-- morris JavaScript -->	
 <script>
-	$(document).ready(function() {
-		//BOX BUTTON SHOW AND CLOSE
-	   jQuery('.small-graph-box').hover(function() {
-		  jQuery(this).find('.box-button').fadeIn('fast');
-	   }, function() {
-		  jQuery(this).find('.box-button').fadeOut('fast');
-	   });
-	   jQuery('.small-graph-box .box-close').click(function() {
-		  jQuery(this).closest('.small-graph-box').fadeOut(200);
-		  return false;
-	   });	   
+	// Prepare data for the chart 
+	const labels = @json($revenueData->pluck('date')); // Lấy dữ liệu ngày
+	const data = @json($revenueData->pluck('revenue')); // Lấy doanh thu
+	// Configure and render the chart 
+	const ctx = document.getElementById('revenueChart').getContext('2d'); 
+	const revenueChart = new Chart(ctx, { 
+		type: 'bar', 
+		data: { 
+			labels: labels, 
+			datasets: [{ 
+				label: 'Doanh thu (VND)', 
+				data: data, 
+				backgroundColor: 'rgba(75, 192, 192, 0.2)', 
+				borderColor: 'rgba(75, 192, 192, 1)',
+				borderWidth: 1 
+			}] 
+		}, 
+		options: { 
+			scales: { 
+				y: { 
+					beginAtZero: true 
+				} 
+			} 
+		} 
 	});
-	</script>
+</script>
 </body>
 </html>
