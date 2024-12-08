@@ -10,7 +10,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <link href="{{ asset('public/css/home.css') }}" rel='stylesheet' type='text/css' />
   <script src="{{ asset('public/js/home.js') }}" defer></script>
-
+  <script src="{{ asset('public/js/search.js') }}" defer></script>
+  <script src="{{ asset('public/js/popup.js') }}" defer></script>
 </head>
 
 <body>
@@ -29,7 +30,7 @@
             <li><a href="{{ route('allProduct') }}">ALL PRODUCTS</a></li>
         </ul>
       </div>
-    
+      <div class="others">
       <form action="{{ route('search') }}" method="GET" id="search-form">
         <li class="search">
           <input placeholder="Tìm kiếm" type="text" name="query" id="search-input">
@@ -42,7 +43,6 @@
         <p class="dropdown-toggle" id="user-full-name"></p>
         <div class="dropdown-content">
           <a id="profile-link" href="#">Thông tin cá nhân</a>
-          <a href="">Đổi mật khẩu</a>
             <form action="{{ route('logout') }}" method="POST" onsubmit="clearLocalStorage()">
               @csrf
               <button type="submit">Đăng xuất</button>
@@ -136,39 +136,47 @@
     </div><br>
     @endforeach
 
-    <!-- Popup giỏ hàng -->
-    <div id="cart-popup" class="cart-popup d-none">
-      <div class="cart-popup-overlay"></div>
-      <div class="cart-popup-content">
-        <div class="cart-popup-header">
-          <h4 class="text-center">Giỏ hàng của bạn</h4>
-          <button id="close-cart-popup" class="btn-close">&times;</button>
-        </div>
-        <div class="cart-popup-body">
-          <p>Đang tải...</p> <!-- Nội dung giỏ hàng sẽ được thêm vào đây -->
-        </div>
-        <div class="cart-popup-footer text-center">
-          <p class="mb-2"><strong>Tổng cộng: <span id="cart-total">300,000₫</span></strong></p>
-          <a href="{{ url('/checkout') }}" class="btn btn-primary w-100">Thanh toán</a>
-        </div>
+    
+<!-- Popup giỏ hàng -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content rounded-3 shadow-lg">
+          <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title" id="cartModalLabel">Giỏ hàng của bạn</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body cart-popup-body">
+              <p>Đang tải nội dung giỏ hàng...</p>
+          </div>
+          <div class="modal-footer">
+              <div class="d-flex justify-content-between w-100">
+                  <div>
+                      <strong>Tổng số lượng: </strong><span id="total-quantity">0</span>
+                  </div>
+                  <div>
+                      <strong>Tổng giá: </strong><span id="total-price">0₫</span>
+                  </div>
+              </div>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+              <a href="/checkout" class="btn btn-primary">Thanh toán</a>
+          </div>
       </div>
-    </div>
   </div>
-  <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="add-to-cart-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="1500">
-      <div class="toast-header">
-        <strong class="me-auto">Thông báo</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        Sản phẩm đã được thêm vào giỏ hàng thành công!
-      </div>
-    </div>
-  </div>
-  
-  
-</body>
+</div>
 
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+<div id="add-to-cart-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="1500">
+  <div class="toast-header bg-success text-white">
+    <i class="bi bi-check-circle me-2"></i> <!-- Thêm icon check-circle -->
+    <strong class="me-auto">Thông báo</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body">
+    <span class="fw-bold">Sản phẩm đã được thêm vào giỏ hàng thành công!</span>
+  </div>
+</div>
+</div>
+</body>
 <footer>
   <div class="container">
     <div class="row">
@@ -211,136 +219,24 @@
     localStorage.removeItem('full_name');
     localStorage.removeItem('customer_id');
 }
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function () { 
     const customerId = localStorage.getItem('customer_id');
+    console.log('Customer ID from localStorage:', customerId);
+
+    const profileLink = document.getElementById('profile-link');
     if (customerId) {
-        document.getElementById('profile-link').setAttribute('href', `/vaastore/profile/${customerId}`);
+        const href = `/vaastore/profile/${customerId}`;
+        profileLink.setAttribute('href', href);
+        console.log('Setting href to:', href);
     } else {
-        document.getElementById('profile-link').setAttribute('href', '/vaastore/login');
+        const href = '/vaastore/login';
+        profileLink.setAttribute('href', href);
+        console.log('Setting href to:', href);
     }
-});
-  
-  $(document).ready(function () {
-    // Xử lý sự kiện khi nhấn nút thêm vào giỏ hàng
-    $('.add-to-cart-btn').on('click', function (e) {
-        e.preventDefault();
-
-        var product_id = $(this).data('product-id'); // Lấy ID sản phẩm từ thuộc tính data
-
-        $.ajax({
-            url: '{{ route('addToCart') }}', // Đường dẫn đến route thêm sản phẩm vào giỏ hàng
-            method: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}', // Thêm token CSRF
-                product_id: product_id // ID sản phẩm
-            },
-            success: function (response) {
-                if (response.status === 'success') {
-                    // Cập nhật số lượng sản phẩm trong giỏ hàng
-                    $('#cart-count').text(response.cart_count);
-                    // Cập nhật nội dung của popup giỏ hàng
-                    updateCartPopup(response.cart_items);
-                    var toast = new bootstrap.Toast(document.getElementById('add-to-cart-toast'));
-        toast.show();
-                } else {
-                    alert('Lỗi khi thêm sản phẩm vào giỏ hàng.');
-                }
-            },
-            error: function () {
-                alert('Đã xảy ra lỗi. Vui lòng thử lại.');
-            }
-        });
-    });
-
-    // Hàm để cập nhật nội dung của popup giỏ hàng
-    function updateCartPopup(cartItems) {
-    let cartContent = '<div class="cart-items">';
-    if (cartItems.length > 0) {
-        cartItems.forEach(item => {
-            cartContent += `
-                <div class="cart-item d-flex align-items-center mb-3">
-                    <img src="${item.image}" alt="${item.name}" class="rounded me-2" style="width: 50px; height: 50px;">
-                    <div class="flex-grow-1">
-                        <p class="mb-0">${item.name}</p>
-                        <p class="text-muted mb-0">${item.price.toLocaleString()}₫</p>
-                        <input type="number" class="form-control quantity-input" 
-                                value="${item.quantity}" 
-                                data-product-id="${item.product_id}" 
-                                min="1">
-                    </div>
-                    <button class="btn btn-sm btn-outline-danger remove-item" data-product-id="${item.product_id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-        });
-        cartContent += '</div>';
-    } else {
-        cartContent = '<p class="text-center">Hiện tại chưa có sản phẩm nào.</p>';
-    }
-    $('.cart-popup-body').html(cartContent);
-}
-
-// Xóa sản phẩm
-document.addEventListener('click', function (event) {
-    if (event.target.classList.contains('remove-item')) {
-        const productId = event.target.getAttribute('data-product-id');
-        
-        // Tạo FormData object
-        const formData = new FormData();
-        formData.append('_token', '{{ csrf_token() }}');
-        formData.append('product_id', productId);
-
-        fetch('{{ route('removeFromCart') }}', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                document.getElementById('cart-count').textContent = data.cart_count;
-                updateCartPopup(data.cart_items);
-            } else {
-                alert('Lỗi khi xóa sản phẩm khỏi giỏ hàng.');
-            }
-        })
-        .catch(() => {
-            alert('Đã xảy ra lỗi. Vui lòng thử lại.');
-        });
-    }
+    console.log('Final Profile Link href:', profileLink.getAttribute('href'));
 });
 
-// Cập nhật số lượng
-document.addEventListener('change', function (event) {
-    if (event.target.classList.contains('quantity-input')) {
-        const productId = event.target.getAttribute('data-product-id');
-        const quantity = event.target.value;
-        
-        // Tạo FormData object
-        const formData = new FormData();
-        formData.append('_token', '{{ csrf_token() }}');
-        formData.append('product_id', productId);
-        formData.append('quantity', quantity);
 
-        fetch('{{ route('updateCartQuantity') }}', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                document.getElementById('cart-count').textContent = data.cart_count;
-                updateCartPopup(data.cart_items);
-            } else {
-                alert('Lỗi khi cập nhật số lượng sản phẩm.');
-            }
-        })
-        .catch(() => {
-            alert('Đã xảy ra lỗi. Vui lòng thử lại.');
-        });
-    }
-});
-});
 </script>
 
 

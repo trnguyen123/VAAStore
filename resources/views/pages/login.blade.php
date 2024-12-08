@@ -54,9 +54,10 @@
             if (response.data.success) {
                 const user = response.data;
                 localStorage.setItem('customer_id', user.customer_id); // Lưu customer_id vào localStorage
+                localStorage.setItem('full_name', user.full_name);
                 setTimeout(() => {
                 window.location.href = '/vaastore/home';
-            }, 5000);            
+            }, 1000);            
             } else {
                 // Hiển thị lỗi nếu đăng nhập không thành công
                 document.getElementById('login-error').style.display = 'block';

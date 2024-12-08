@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <link href="{{ asset('public/css/home.css') }}" rel='stylesheet' type='text/css' />
   <script src="{{ asset('public/js/home.js') }}" defer></script>
-
+  <script src="{{ asset('public/js/search.js') }}" defer></script>
 </head>
 
 <body>
@@ -56,7 +56,9 @@
 
     
         <li>
-            <a class="fa fa-shopping-bag" href="{{ url('/carts') }}"></a>
+          <a class="fa fa-shopping-bag" href="#" id="cart-icon">
+              <span id="cart-count" class="badge badge-danger">{{ session('cart') ? count(session('cart')) : 0 }}</span>
+          </a>
         </li>
         <li>
             <a class="fa fa-heart" href="{{ url('/favorites') }}"></a> 
@@ -157,6 +159,46 @@
       </div>
     </div>
   </div>
+  
+<!-- Popup giỏ hàng -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content rounded-3 shadow-lg">
+          <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title" id="cartModalLabel">Giỏ hàng của bạn</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body cart-popup-body">
+              <p>Đang tải nội dung giỏ hàng...</p>
+          </div>
+          <div class="modal-footer">
+              <div class="d-flex justify-content-between w-100">
+                  <div>
+                      <strong>Tổng số lượng: </strong><span id="total-quantity">0</span>
+                  </div>
+                  <div>
+                      <strong>Tổng giá: </strong><span id="total-price">0₫</span>
+                  </div>
+              </div>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+              <a href="/checkout" class="btn btn-primary">Thanh toán</a>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="add-to-cart-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="1500">
+    <div class="toast-header bg-success text-white">
+      <i class="bi bi-check-circle me-2"></i> <!-- Thêm icon check-circle -->
+      <strong class="me-auto">Thông báo</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      <span class="fw-bold">Sản phẩm đã được thêm vào giỏ hàng thành công!</span>
+    </div>
+  </div>
+</div>
 </body><br>
 
 <footer>

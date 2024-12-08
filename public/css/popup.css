@@ -1,0 +1,136 @@
+/* Đặt các hiệu ứng bóng mờ, bo góc cho modal */
+.modal-content {
+    border-radius: 15px; /* Bo góc cho modal */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Tạo bóng mờ */
+    padding: 20px;
+}
+
+/* Tùy chỉnh header modal */
+.modal-header {
+    background-color: #66b3ff; /* Màu nền xanh dương */
+    color: #fff; /* Chữ trắng */
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/* Nút đóng modal */
+.btn-close {
+    color: #fff;
+}
+
+/* Tùy chỉnh nội dung giỏ hàng */
+.cart-popup-body {
+    max-height: 400px; /* Giới hạn chiều cao */
+    overflow-y: auto; /* Thêm thanh cuộn nếu quá dài */
+}
+
+/* Tùy chỉnh nội dung trong giỏ hàng */
+.cart-popup-body ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Cải tiến giao diện sản phẩm trong giỏ hàng */
+.cart-popup-body li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.cart-popup-body li img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+/* Cải tiến nút xóa sản phẩm */
+.remove-item {
+    background-color: #f44336; /* Màu đỏ */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.remove-item:hover {
+    background-color: #d32f2f; /* Đổi màu khi hover */
+}
+
+/* Cải tiến input số lượng */
+.quantity-input {
+    width: 60px;
+    margin-right: 10px;
+}
+
+/* Nút thanh toán */
+.btn-primary {
+    background-color: #28a745; /* Màu xanh lá */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.btn-primary:hover {
+    background-color: #218838; /* Màu khi hover */
+}
+
+/* Thiết kế cho phần tổng số lượng và tổng giá */
+.modal-footer .d-flex {
+    font-size: 1rem;
+}
+
+.modal-footer strong {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+#total-quantity, #total-price {
+    color: #007bff; /* Màu xanh dương cho tổng số lượng và tổng giá */
+    font-size: 1.1rem;
+}
+
+
+/* Thông báo */
+.toast {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: slideInUp 0.5s ease-in-out;
+  }
+  
+  .toast-header {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  .toast-body {
+    font-size: 14px;
+  }
+  
+  .toast-container {
+    z-index: 1050; /* Đảm bảo toast luôn nổi bật */
+  }
+  
+  @keyframes slideInUp {
+    0% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .toast-header.bg-success {
+    background-color: #28a745 !important; /* Màu nền của header */
+  }
+  
+  .toast-body {
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 15px;
+    border-radius: 10px;
+  }
+  

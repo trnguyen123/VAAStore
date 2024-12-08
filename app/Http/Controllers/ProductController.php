@@ -137,9 +137,10 @@ class ProductController extends Controller{
     }
     public function search(Request $request)
     {
+        $categories = Category::all();
     $query = $request->input('query');
-    $products = Product::where('product_name', 'LIKE', "%{$query}%")->get();
+    $products = Product::where('product_name', 'LIKE', "%{$query}%")->paginate(8);
 
-    return view('pages.search_results', compact('products', 'query'));
+    return view('pages.search_results', compact('products','categories', 'query'));
     }
 }
