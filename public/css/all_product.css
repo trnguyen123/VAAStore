@@ -91,4 +91,52 @@ form {
 body a:hover {
     text-decoration: none;
 }
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
 
+.pagination ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a {
+    color: #333;
+    border-color: #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pagination a::before {
+    content: none;
+}
+
+.pagination a:hover {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.pagination .disabled {
+    color: #ccc;
+    pointer-events: none;
+    cursor: default;
+}
+
+.pagination a svg {
+     width: 12px;
+     height: 12px;
+}
+
+/* Tùy chỉnh màu sắc của số trang đang hoạt động */
+.pagination a.active {
+    background-color: #007bff;
+    color: #fff;
+}

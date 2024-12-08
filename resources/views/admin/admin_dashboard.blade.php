@@ -59,6 +59,24 @@
 						</ul>
 					</li>
 					<li class="sub-menu">
+						<a class="">
+							<i class="fa-solid fa-tag"></i>
+							<span>Đơn hàng </span>
+						</a>
+						<ul class="sub">
+							<li><a href="{{ url('/admin/orders') }}">Xem đơn hàng</a></li>
+						</ul>
+					</li>
+					<li class="sub-menu">
+						<a class="">
+							<i class="fa-solid fa-tag"></i>
+							<span>Thanh toán </span>
+						</a>
+						<ul class="sub">
+							<li><a href="{{ url('/admin/payments') }}">Quản lí thanh toán</a></li>
+						</ul>
+					</li>
+					<li class="sub-menu">
 						<a class="" href="{{ url('/login/admin') }}">
 							<i class="fa fa-key"></i>
 							<span>Đăng xuất</span>
@@ -74,7 +92,8 @@
 				<label for="selected_date">Chọn ngày:</label>
 				<input type="date" id="selected_date" name="selected_date" value="{{ request('selected_date') }}">
 				<button type="submit">Lọc</button>
-			</form>			
+			</form>
+			<h1 class="text-center text-primary">Danh thu của cửa hàng</h1>
 			<canvas id="revenueChart"></canvas>	
 		</div>
 	</section>

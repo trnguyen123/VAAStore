@@ -8,6 +8,8 @@ class Customer extends Authenticatable
 {
     protected $table = 'customers'; // tên bảng
     public $timestamps = false; // Tắt timestamps
+    protected $primaryKey = 'customer_id';
+    protected $keyType = 'string';
 
     protected $fillable = [
         'customer_id',

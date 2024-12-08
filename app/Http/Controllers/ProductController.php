@@ -54,6 +54,7 @@ class ProductController extends Controller{
 
     public function all_product(){
         $products = Product::all();
+        $products = Product::paginate(10);
         return view('admin.all_product', compact('products'));
     }
 
@@ -134,5 +135,11 @@ class ProductController extends Controller{
         $categories = Category::all(); 
         return view('pages.product', compact('products','categories'));
     }
+    public function search(Request $request)
+    {
+    $query = $request->input('query');
+    $products = Product::where('product_name', 'LIKE', "%{$query}%")->get();
 
+    return view('pages.search_results', compact('products', 'query'));
+    }
 }

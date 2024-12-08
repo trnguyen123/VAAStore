@@ -28,7 +28,7 @@
             @endforeach
             <li><a href="{{ route('allProduct') }}">ALL PRODUCTS</a></li>
         </ul>
-    </div>
+      </div>
     
       <div class="others">
         <li class="search">
@@ -69,31 +69,12 @@
       <!-- Image section -->
       <div class="col-md-6">
         <img src="{{ asset('public/' . $product->product_img) }}" class="product-image-main" alt="Product Image">
-        <div class="row mt-3">
-          <div class="col-3">
-            <img src="https://via.placeholder.com/100" class="product-thumbnail" alt="Thumbnail 1">
-          </div>
-          <div class="col-3">
-            <img src="https://via.placeholder.com/100" class="product-thumbnail" alt="Thumbnail 2">
-          </div>
-          <div class="col-3">
-            <img src="https://via.placeholder.com/100" class="product-thumbnail" alt="Thumbnail 3">
-          </div>
-          <div class="col-3">
-            <img src="https://via.placeholder.com/100" class="product-thumbnail" alt="Thumbnail 4">
-          </div>
-        </div>
       </div>
 
       <!-- Product Details section -->
       <div class="col-md-6">
         <h1 class="product-title">{{ $product->product_name }}</h1>
         <div class="product-price">{{ number_format($product->product_price, 0, ',', '.') }}đ</div>
-        <div class="product-color mb-3">
-          <span>Màu sắc: Kẻ Xanh tím than</span><br>
-          <div class="color-option" style="background-color: #4e5b76;"></div>
-          <div class="color-option" style="background-color: #333;"></div>
-        </div>
         <div class="size-options mb-3">
           <label>Chọn size:</label><br>
           <button class="btn btn-outline-secondary">S</button>
@@ -111,9 +92,12 @@
           </div><br>
           <button class="btn btn-outline-secondary"><i class="far fa-heart"></i></button>
         </div>
-        <button class="btn btn-outline-dark btn-buy">THÊM VÀO GIỎ</button>
-        <button class="btn btn-dark btn-cart">MUA HÀNG</button>
-
+        <a href="{{ url('/carts') }}">
+          <button class="btn btn-outline-dark btn-buy">THÊM VÀO GIỎ</button>
+        </a>
+        <a href="{{ route('checkout', ['product_id' => $product->product_id]) }}">
+          <button class="btn btn-dark btn-cart">MUA HÀNG</button>
+        </a>      
         <div class="mt-4">
           <ul class="nav nav-tabs" id="productTab" role="tablist">
             <li class="nav-item" role="presentation">

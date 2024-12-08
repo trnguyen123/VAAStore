@@ -27,10 +27,14 @@
         </ul>
     </div>
     <div class="others">
-    <li class="search">
-        <input placeholder="Tìm kiếm" type="text" id="search-input">
-        <i class="fas fa-search"></i>
-    </li>
+      <form action="{{ route('search') }}" method="GET" id="search-form">
+        <li class="search">
+          <input placeholder="Tìm kiếm" type="text" name="query" id="search-input">
+          <button type="submit" style="background: none; border: none; cursor: pointer;">
+            <i class="fas fa-search"></i>
+          </button>
+        </li>
+      </form>
 
     @if(session('full_name'))
     <li class="dropdown">
@@ -95,8 +99,12 @@
                 <span class="old-price">{{ number_format($product->product_old_price, 0, ',', '.') }}đ</span>
               </div>
               <div class="mt-2">
-                <button class="btn btn-outline-secondary"><i class="far fa-heart"></i></button>
-                <button class="btn btn-dark"><i class="fas fa-shopping-bag"></i></button>
+                <a href="{{ url('/favorites') }}">
+                  <button class="btn btn-outline-secondary"><i class="far fa-heart"></i></button>
+                </a>
+                <a href="{{ url('/carts') }}">
+                  <button class="btn btn-dark"><i class="fas fa-shopping-bag"></i></button>
+                </a>                
               </div>
           </div>
         </div>

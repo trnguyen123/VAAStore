@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-use App\Http\Controllers\Controller;
 
-use Illuminate\Support\Facades\Validator; 
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash; 
-use App\Models\Customer; 
+use Illuminate\Support\Facades\Hash;
+use App\Models\Customer;
 
 class LoginController extends Controller
 {
@@ -39,7 +39,10 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('pages.login'); // Trả về view đăng nhập, hãy chắc chắn rằng view này tồn tại
+        if (Auth::check()) {
+            return redirect()->route('home'); // Nếu đã đăng nhập thì chuyển hướng về trang home
+        }
+        return view('pages.login'); 
     }
 
     /**
@@ -48,33 +51,40 @@ class LoginController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request) {
+    public function login(Request $request)
+{
     $credentials = $request->only('username', 'password');
 
-    if (Auth::attempt($credentials)) {
-        if (Auth::check()) {
-            session(['full_name' => Auth::user()->full_name]);
-            return redirect()->intended('/home');
-        }
+    // Kiểm tra thông tin đăng nhập
+    if (Auth::guard('web')->attempt($credentials)) {
+        // Lấy thông tin người dùng
+        $user = Auth::user();
+
+        return response()->json([
+            'success' => true,
+            'full_name' => $user->full_name,
+            'customer_id' => $user->customer_id,
+        ]);
     }
 
-    return back()->withErrors([
-        'email' => 'Thông tin đăng nhập không chính xác.',
-    ]);
+    return response()->json([
+        'success' => false,
+        'message' => 'Thông tin đăng nhập không chính xác.',
+    ], 401);
 }
-
 
     /**
      * Log the user out of the application.
      *
      * @return \Illuminate\Http\Response
      */
-    public function logout() {
+    public function logout()
+    {
         Auth::logout();
         session()->invalidate(); // Làm mất hiệu lực session hiện tại
         session()->regenerateToken(); // Đảm bảo token không bị tái sử dụng
-        return redirect()->intended('/home');}
-
+        return redirect()->route('home'); 
+    }
 
     /**
      * Show the application's registration form.
@@ -83,7 +93,7 @@ class LoginController extends Controller
      */
     public function showSignupForm()
     {
-        return view('pages.signup'); // Trả về view đăng ký, hãy chắc chắn rằng view này tồn tại
+        return view('pages.signup'); // Trả về view đăng ký
     }
 
     /**
@@ -92,10 +102,11 @@ class LoginController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function signup(Request $request) {
+    public function signup(Request $request)
+    {
         // Xác thực dữ liệu đầu vào
         $validator = Validator::make($request->all(), [
-            'full_name' => 'required|string|max:255|',
+            'full_name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:customers',
             'email' => 'required|string|email|max:100|unique:customers',
             'password' => 'required|string|min:3|confirmed', // 'confirmed' yêu cầu có trường 'password_confirmation' trong form đăng kí

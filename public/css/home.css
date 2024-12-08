@@ -56,6 +56,7 @@ header {
     line-height: 20px;
     text-decoration: none;
     color: inherit;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
 }
 
 .menu > li > a:hover {
@@ -66,6 +67,7 @@ header {
 .others {
     flex: 2;
     display: flex;
+    justify-content: flex-end;
     align-items: center; 
 }
 
@@ -193,6 +195,23 @@ p {
     justify-content: center; /* Center the row content */
 }
 
+#cart-icon {
+    position: relative;  /* Đảm bảo biểu tượng giỏ hàng là điểm gốc cho số lượng */
+    font-size: 18px;      /* Kích thước biểu tượng giỏ hàng */
+}
+
+#cart-count {
+    position: absolute;
+    bottom: -5px;            /* Đặt số lượng lên trên biểu tượng giỏ hàng */
+    right: -5px;          /* Đặt số lượng vào bên phải biểu tượng giỏ hàng */
+    font-size: 9px;      /* Kích thước chữ của số lượng */
+    padding: 3px 6px;     /* Tạo khoảng cách giữa số lượng và viền của badge */
+    border-radius: 50%;   /* Tạo hình tròn cho badge */
+    background-color: #dc3545; /* Màu nền của badge */
+    color: #fff;          /* Màu chữ của số lượng */
+    font-weight: bold;    /* Đậm số lượng */
+}
+
 /* Tạo một khối chứa sản phẩm có thể di chuyển */
 .product-slider {
     position: relative;
@@ -277,3 +296,205 @@ p {
     padding: 5px 10px;
     border-radius: 5px;
   }
+
+  @media (max-width: 768px) {
+    header {
+        padding: 12px 20px;
+    }
+
+    .menu {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .others {
+        flex-direction: column;
+        align-items: center;
+        padding-top: 10px;
+    }
+
+    .logo {
+        width: 40px; /* Giảm kích thước logo trên mobile */
+    }
+
+    .product-card {
+        flex: 0 0 45%; /* Các sản phẩm sẽ chiếm 45% chiều rộng ở màn hình nhỏ */
+    }
+}
+
+
+/* Popup giỏ hàng */
+.cart-popup {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1050;
+    transition: transform 0.3s ease-in-out; /* Hiệu ứng mở/đóng */
+    transform: translateX(100%); /* Ẩn popup lúc đầu */
+}
+
+.cart-popup.show {
+    transform: translateX(0); /* Hiển thị popup */
+}
+
+.cart-popup-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.cart-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    background: #f8f9fa;
+}
+
+.cart-popup-header h4 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.cart-popup-header .btn-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.cart-popup-body {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto; /* Cuộn nếu nội dung dài hơn */
+}
+
+.cart-popup-body p {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.cart-popup-footer {
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    background: #f8f9fa;
+    text-align: center;
+}
+
+.cart-popup-footer .btn {
+    width: 100%;
+}
+
+/* Để ẩn popup khi không cần */
+.d-none {
+    display: none;
+}
+
+/* Popup giỏ hàng */
+#cart-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    padding: 20px;
+    display: none; /* Ẩn mặc định */
+}
+
+/* Hiển thị popup */
+#cart-popup.show {
+    display: block;
+    animation: popup-fade-in 0.3s ease-out;
+}
+
+/* Nút đóng popup */
+#close-cart-popup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+}
+
+/* Nút đóng hover */
+#close-cart-popup:hover {
+    color: black;
+}
+
+/* Nội dung giỏ hàng */
+.cart-popup-content h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.cart-popup-content p {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.cart-popup-content .btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Nút xóa sản phẩm */
+.remove-item {
+    background: none; /* Loại bỏ nền */
+    border: none; /* Loại bỏ viền */
+    cursor: pointer; /* Thêm con trỏ dạng tay */
+    padding: 4px; /* Khoảng cách bên trong nút nhỏ */
+}
+
+/* Chỉnh kích thước và màu của icon */
+.remove-item i {
+    font-size: 14px; /* Kích thước icon nhỏ hơn */
+    color: #dc3545; /* Màu đỏ mặc định cho icon */
+    transition: color 0.3s ease; /* Hiệu ứng chuyển đổi màu khi hover */
+}
+
+/* Hiệu ứng hover cho icon */
+.remove-item i:hover {
+    color: #ff0000; /* Màu đỏ đậm hơn khi hover */
+}
+
+.btn-sm.remove-item {
+    padding: 2px 4px; /* Giảm padding toàn nút */
+}
+
+
+/* Hiệu ứng mờ popup */
+@keyframes popup-fade-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -45%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+#search-button {
+    background: none; /* Không có nền */
+    border: none; /* Không có đường viền */
+    cursor: pointer; /* Hiển thị con trỏ tay khi di chuột */
+    font-size: 16px; /* Kích thước biểu tượng */
+}
