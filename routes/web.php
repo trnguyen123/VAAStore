@@ -31,13 +31,11 @@ Route::middleware('auth')->group(function () {
 });
 
 // Profile routes
-Route::middleware('auth:web')->group(function () {
-    Route::get('/profile/{id}', [ProfileController::class, 'showProfile'])->name('profile.show');
-    Route::get('/profile/edit', [ProfileController::class, 'editProfile'])->name('profile.edit');
-    Route::post('/profile/edit', [ProfileController::class, 'updateProfile'])->name('profile.update'); 
-});
-
-
+Route::get('/profile', [ProfileController::class, 'showProfilePage'])->name('profile.page');
+Route::post('/profile', [ProfileController::class, 'showProfile'])->name('profile.show');
+Route::get('/profile/edit', [ProfileController::class, 'showEditProfilePage'])->name('profile.editpage');
+Route::post('/profile/edit', [ProfileController::class, 'editProfilePage'])->name('profile.edit');
+Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update'); 
 
 // Product routes
 Route::get('/products/category/{category_id}', [ProductController::class, 'showProductWithCategory'])->name('products.category');
@@ -54,13 +52,13 @@ Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('
 Route::get('/checkout/success', function () {
     echo "<h1>Bạn đã đặt hàng thành công.</h1>";
     echo "<p>Đang chuyển hướng về trang chủ...</p>";
-    echo "<script>setTimeout(function() { window.location.href = '/vaastore/home'; }, 600);</script>";
+    echo "<script>setTimeout(function() { window.location.href = '/vaastore/home'; }, 2000);</script>";
 })->name('checkout.success');
 
 Route::get('/checkout/failure', function () {
     echo "<h1>Có lỗi xảy ra trong quá trình xử lý đơn hàng.</h1>";
     echo "<p>Đang chuyển hướng về trang chủ...</p>";
-    echo "<script>setTimeout(function() { window.location.href = '/vaastore/home'; }, 600);</script>";
+    echo "<script>setTimeout(function() { window.location.href = '/vaastore/home'; }, 1000);</script>";
 })->name('checkout.failure');
 
 Route::post('/vnpay/payment', [PaymentController::class, 'vnpay_payment'])->name('vnpay.payment');
@@ -70,11 +68,9 @@ Route::get('paypal/payment/success', [PayPalController::class, 'paymentSuccess']
 Route::get('paypal/payment/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.payment/cancel');
 
 // Route hiển thị danh sách yêu thích của người dùng
-Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
-Route::post('/addToFavorites', [ProductController::class, 'addToFavorites'])->name('addToFavorites');
-
-// Route thêm hoặc bỏ yêu thích sản phẩm
-Route::post('/products/{product_id}/favorite', [FavoriteController::class, 'toggleFavorite'])->name('products.favorite');
+Route::post('/favorites/add', [FavoriteController::class, 'addFavorite'])->name('fav.add');
+Route::get('/favorites/{customerId}', [FavoriteController::class, 'getFavorites'])->name('fav.get');
+Route::delete('/favorites/remove', [FavoriteController::class, 'removeFavorite'])->name('fav.del');
 
 
 // Admin routes
@@ -87,7 +83,7 @@ Route::get('/admin/all-product', [ProductController::class, 'all_product'])->nam
 Route::get('admin/edit-product/{product_id}', [ProductController::class, 'edit'])->name('admin.products.edit');
 Route::put('admin/update-product/{product_id}', [ProductController::class, 'update'])->name('admin.update_product');
 Route::delete('admin/delete-product/{product_id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
- Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
+Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
 Route::get('/order/{id}', [OrderController::class, 'show'])->name('admin.order.show');
 Route::get('/order/edit/{id}', [OrderController::class, 'edit'])->name('admin.order.edit');
 Route::post('/order/update/{id}', [OrderController::class, 'update'])->name('admin.order.update');

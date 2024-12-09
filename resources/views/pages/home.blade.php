@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>VAA Store</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -12,6 +13,14 @@
   <script src="{{ asset('public/js/home.js') }}" defer></script>
   <script src="{{ asset('public/js/search.js') }}" defer></script>
   <script src="{{ asset('public/js/popup.js') }}" defer></script>
+  <script>
+    const csrfToken = "{{ csrf_token() }}";
+    const routes = {
+        addToCart: "{{ route('addToCart') }}",
+        removeFromCart: "{{ route('removeFromCart') }}",
+        updateCartQuantity: "{{ route('updateCartQuantity') }}"
+    };
+  </script>
 </head>
 
 <body>
@@ -42,11 +51,11 @@
       <li class="dropdown" id="user-dropdown" style="display: none;">
         <p class="dropdown-toggle" id="user-full-name"></p>
         <div class="dropdown-content">
-          <a id="profile-link" href="#">Thông tin cá nhân</a>
-            <form action="{{ route('logout') }}" method="POST" onsubmit="clearLocalStorage()">
-              @csrf
-              <button type="submit">Đăng xuất</button>
-            </form>
+          <a id="profile-link" href="{{ route('profile.page') }}">Thông tin cá nhân</a>
+          <form action="{{ route('logout') }}" method="POST" onsubmit="clearLocalStorage()">
+            @csrf
+            <button type="submit">Đăng xuất</button>
+          </form>
         </div>
       </li>
       <li id="login-link" style="display: none;">
@@ -113,10 +122,12 @@
                   </a>
                   <p class="product-price">{{ number_format($product->product_price, 0, ',', '.') }}₫</p>
                   <div class="mt-2">
-                    <button class="btn btn-outline-secondary"><i class="far fa-heart"></i></button>
+                    <button class="btn btn-outline-secondary add-to-favorite" onclick="addFavorite('{{ $product->product_id }}')">
+                      <i class="far fa-heart"></i>
+                    </button>                  
                     <button class="btn btn-dark add-to-cart-btn" data-product-id="{{ $product->product_id }}">
                       <i class="fas fa-shopping-bag"></i>
-                  </button>                  
+                    </button>                  
                   </div>
                 </div>
               </div>
@@ -158,7 +169,7 @@
                   </div>
               </div>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-              <a href="/checkout" class="btn btn-primary">Thanh toán</a>
+              <a href={{ route('checkout') }} class="btn btn-primary">Thanh toán</a>
           </div>
       </div>
   </div>
@@ -219,23 +230,56 @@
     localStorage.removeItem('full_name');
     localStorage.removeItem('customer_id');
 }
-  document.addEventListener('DOMContentLoaded', function () { 
-    const customerId = localStorage.getItem('customer_id');
-    console.log('Customer ID from localStorage:', customerId);
+const customerId = localStorage.getItem('customer_id');
+console.log('Customer ID:', customerId); // Log giá trị để kiểm tra
 
-    const profileLink = document.getElementById('profile-link');
-    if (customerId) {
-        const href = `/vaastore/profile/${customerId}`;
-        profileLink.setAttribute('href', href);
-        console.log('Setting href to:', href);
-    } else {
-        const href = '/vaastore/login';
-        profileLink.setAttribute('href', href);
-        console.log('Setting href to:', href);
-    }
-    console.log('Final Profile Link href:', profileLink.getAttribute('href'));
+fetch('/vaastore/profile', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken, 
+    },
+    body: JSON.stringify({ customer_id: customerId }),
+})
+    .then(response => response.json())
+    .then(data => console.log('Profile data:', data))
+    .catch(error => console.error('Error:', error));
+
+  document.querySelectorAll('.add-to-favorite').forEach(button => {
+    button.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');  // Lấy productId từ data attribute
+        addFavorite(productId);  // Truyền productId như một chuỗi
+    });
 });
 
+  function addFavorite(productId) {
+    const customerId = localStorage.getItem('customer_id');
+
+    if (!customerId) {
+        alert("Please log in to add favorites");
+        return;
+    }
+
+    console.log("Sending data:", {
+        customer_id: customerId,
+        product_id: productId,  // productId là chuỗi
+    });
+
+    fetch('/vaastore/favorites/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify({
+            customer_id: customerId,
+            product_id: productId,  // Đảm bảo product_id là chuỗi
+        }),
+    })
+    .then(response => response.json())
+    .then(data => alert(data.message))
+    .catch(error => console.error('Error:', error));
+}
 
 </script>
 

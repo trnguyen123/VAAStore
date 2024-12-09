@@ -7,9 +7,17 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link href="{{ asset('public/css/product.css') }}" rel='stylesheet' type='text/css' />
-<script src="{{ asset('public/js/product.js') }}" defer></script> <!-- Sử dụng defer để trì hoãn thực thi cho đến khi tải xong HTML -->
+<script src="{{ asset('public/js/product.js') }}" defer></script> 
 <script src="{{ asset('public/js/search.js') }}" defer></script>
 <script src="{{ asset('public/js/popup.js') }}" defer></script>
+<script>
+  const csrfToken = "{{ csrf_token() }}";
+  const routes = {
+      addToCart: "{{ route('addToCart') }}",
+      removeFromCart: "{{ route('removeFromCart') }}",
+      updateCartQuantity: "{{ route('updateCartQuantity') }}"
+  };
+  </script>
 </head>
 <body>
 <div class="app">
@@ -37,31 +45,27 @@
         </li>
       </form>
 
-    @if(session('full_name'))
-    <li class="dropdown">
-        <p class="dropdown-toggle">{{ session('full_name') }}</p>
+      <li class="dropdown" id="user-dropdown" style="display: none;">
+        <p class="dropdown-toggle" id="user-full-name"></p>
         <div class="dropdown-content">
-            <a href="{{ route('profile') }}">Thông tin cá nhân</a>
-            <a href="">Đổi mật khẩu</a>
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit">Đăng xuất</button>
+          <a id="profile-link" href="#">Thông tin cá nhân</a>
+            <form action="{{ route('logout') }}" method="POST" onsubmit="clearLocalStorage()">
+              @csrf
+              <button type="submit">Đăng xuất</button>
             </form>
         </div>
-    </li>
-    @else
-        <li>
-            <a class="fa fa-user" href="{{ url('/login') }}"></a>
-        </li>
-    @endif
-
-
-    <li>
-        <a class="fa fa-shopping-bag" href="{{ url('/carts') }}"></a>
-    </li>
-    <li>
-        <a class="fa fa-heart" href="{{ url('/favorites') }}"></a> 
-    </li>
+      </li>
+      <li id="login-link" style="display: none;">
+          <a class="fa fa-user" href="{{ url('/login') }}"></a>
+      </li>   
+      <li>
+        <a class="fa fa-shopping-bag" href="#" id="cart-icon">
+            <span id="cart-count" class="badge badge-danger">{{ session('cart') ? count(session('cart')) : 0 }}</span>
+        </a>
+      </li>
+      <li>
+          <a class="fa fa-heart" href="{{ url('/favorites') }}"></a> 
+      </li>
 </div>
 </header>
 <div class="row mt-4">
@@ -100,12 +104,12 @@
                 <span class="old-price">{{ number_format($product->product_old_price, 0, ',', '.') }}đ</span>
               </div>
               <div class="mt-2">
-                <a href="{{ url('/favorites') }}">
-                  <button class="btn btn-outline-secondary"><i class="far fa-heart"></i></button>
-                </a>
-                <a href="{{ url('/carts') }}">
-                  <button class="btn btn-dark"><i class="fas fa-shopping-bag"></i></button>
-                </a>                
+                <button class="btn btn-outline-secondary add-to-favorite" onclick="addFavorite('{{ $product->product_id }}')">
+                  <i class="far fa-heart"></i>
+                </button>     
+                <button class="btn btn-dark add-to-cart-btn" data-product-id="{{ $product->product_id }}">
+                  <i class="fas fa-shopping-bag"></i>
+                </button>                
               </div>
           </div>
         </div>
@@ -180,4 +184,74 @@
         </div>
     </div>
 </footer>
+<script>
+  // Lấy thông tin từ localStorage
+  const fullName = localStorage.getItem('full_name');
+
+  if (fullName) {
+      // Nếu đã đăng nhập, hiển thị dropdown user
+      document.getElementById('user-dropdown').style.display = 'block';
+      document.getElementById('user-full-name').innerText = fullName;
+  } else {
+      // Nếu chưa đăng nhập, hiển thị liên kết đăng nhập
+      document.getElementById('login-link').style.display = 'block';
+  }
+
+  function clearLocalStorage() {
+    localStorage.removeItem('full_name');
+    localStorage.removeItem('customer_id');
+}
+  document.addEventListener('DOMContentLoaded', function () { 
+    const customerId = localStorage.getItem('customer_id');
+    console.log('Customer ID from localStorage:', customerId);
+
+    const profileLink = document.getElementById('profile-link');
+    if (customerId) {
+        const href = `/vaastore/profile/${customerId}`;
+        profileLink.setAttribute('href', href);
+        console.log('Setting href to:', href);
+    } else {
+        const href = '/vaastore/login';
+        profileLink.setAttribute('href', href);
+        console.log('Setting href to:', href);
+    }
+    console.log('Final Profile Link href:', profileLink.getAttribute('href'));
+});
+document.querySelectorAll('.add-to-favorite').forEach(button => {
+    button.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');  // Lấy productId từ data attribute
+        addFavorite(productId);  // Truyền productId như một chuỗi
+    });
+});
+
+  function addFavorite(productId) {
+    const customerId = localStorage.getItem('customer_id');
+
+    if (!customerId) {
+        alert("Please log in to add favorites");
+        return;
+    }
+
+    console.log("Sending data:", {
+        customer_id: customerId,
+        product_id: productId,  // productId là chuỗi
+    });
+
+    fetch('/vaastore/favorites/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify({
+            customer_id: customerId,
+            product_id: productId,  // Đảm bảo product_id là chuỗi
+        }),
+    })
+    .then(response => response.json())
+    .then(data => alert(data.message))
+    .catch(error => console.error('Error:', error));
+}
+
+</script>
 </html>

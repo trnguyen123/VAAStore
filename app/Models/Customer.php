@@ -44,5 +44,8 @@ class Customer extends Authenticatable
         }
     });
 }
-
+    public function favorites()
+        {
+            return $this->hasMany(Favorite::class, 'customer_id', 'id');
+        }
 }
