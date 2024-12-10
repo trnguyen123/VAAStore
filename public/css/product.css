@@ -62,6 +62,52 @@ header {
     text-decoration: underline;
 }
 
+
+.others {
+    flex: 2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center; 
+}
+
+.others > li {
+    padding: 0 12px;
+    position: relative; 
+}
+
+.others > li.search {
+    flex: 2;
+    display: flex;
+    align-items: center;
+}
+
+.others > li.search input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.others > li.search input:focus {
+    border-color: #999;
+}
+
+.others > li.search input::placeholder {
+    color: #999;
+    opacity: 1;
+}
+
+.others > li.search i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    cursor: pointer;
+}
+
 /* Dropdown menu */
 .dropdown {
     position: relative;

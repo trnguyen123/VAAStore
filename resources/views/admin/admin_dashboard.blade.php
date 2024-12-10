@@ -55,7 +55,7 @@
 							<span>Thành viên </span>
 						</a>
 						<ul class="sub">
-							<li><a href="{{ url('/admin/all-customer') }}">Xem thành viên</a></li>
+							<li><a href={{ route('admin.all_customer') }}>Xem thành viên</a></li>
 						</ul>
 					</li>
 					<li class="sub-menu">

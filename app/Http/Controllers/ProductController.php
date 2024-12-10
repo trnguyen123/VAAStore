@@ -51,7 +51,7 @@ class ProductController extends Controller{
     }
 
     public function all_product(){
-        $products = Product::all();
+        $products = Product::paginate(10);
         return view('admin.all_product', compact('products'));
     }
 

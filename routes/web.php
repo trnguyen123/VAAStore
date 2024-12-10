@@ -12,6 +12,8 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CustomerController;
+
 
 
 // Public routes
@@ -87,3 +89,8 @@ Route::get('/order/{id}', [OrderController::class, 'show'])->name('admin.order.s
 Route::get('/order/edit/{id}', [OrderController::class, 'edit'])->name('admin.order.edit');
 Route::post('/order/update/{id}', [OrderController::class, 'update'])->name('admin.order.update');
 Route::get('/order/delete/{id}', [OrderController::class, 'destroy'])->name('admin.order.delete');
+
+Route::get('/all-customer', [CustomerController::class, 'index'])->name('admin.all_customer');
+Route::get('/customer/{id}/edit', [CustomerController::class, 'edit'])->name('admin.edit_customer');
+Route::put('/customer/{id}', [CustomerController::class, 'update'])->name('admin.update_customer');
+Route::delete('/customer/{id}', [CustomerController::class, 'destroy'])->name('admin.del_customer');
