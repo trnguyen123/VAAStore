@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>VAA Store</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <link href="{{ asset('public/css/home.css') }}" rel='stylesheet' type='text/css' />
+  <link href="{{ asset('public/css/product_detail.css') }}" rel='stylesheet' type='text/css' />
   <script src="{{ asset('public/js/home.js') }}" defer></script>
   <script src="{{ asset('public/js/search.js') }}" defer></script>
   <script src="{{ asset('public/js/popup.js') }}" defer></script>
+  <script src="{{ asset('public/js/product_detail.js') }}" ></script>
+
   <script>
     const csrfToken = "{{ csrf_token() }}";
     const routes = {
@@ -140,6 +143,28 @@
       </div>
     </div>
   </div>
+  <div class="product-reviews mt-5">
+    <h3>Đánh giá và bình luận sản phẩm</h3>
+    
+    <!-- Form thêm bình luận -->
+    <div class="add-review mt-4">
+      <div class="rating">
+        <span class="star" data-value="5">&#9733;</span>
+        <span class="star" data-value="4">&#9733;</span>
+        <span class="star" data-value="3">&#9733;</span>
+        <span class="star" data-value="2">&#9733;</span>
+        <span class="star" data-value="1">&#9733;</span>
+      </div>
+      <textarea id="comment-input" class="form-control mt-3" rows="3" placeholder="Viết bình luận của bạn..."></textarea>
+      <button id="submit-comment" class="btn btn-primary mt-2">Gửi</button>
+    </div>
+  
+    <!-- Danh sách bình luận -->
+    <div id="comments-section" class="comments-list mt-4">
+      <!-- Đây là nơi hiển thị các bình luận -->
+      <p>Chưa có bình luận nào. Hãy là người đầu tiên!</p>
+    </div>
+  </div>
 
   <div class="related-products mt-5">
       <h2 class="text-center mb-4">CÓ THỂ BẠN SẼ THÍCH</h2>
@@ -165,7 +190,6 @@
       </div>
     </div>
   </div>
-  
 <!-- Popup giỏ hàng -->
 <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">

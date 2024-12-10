@@ -13,6 +13,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CommentController;
 
 
 
@@ -47,6 +48,9 @@ Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('addToCa
 Route::post('/removeFromCart', [CartController::class, 'removeFromCart'])->name('removeFromCart');
 Route::post('/updateCartQuantity', [CartController::class, 'updateCartQuantity'])->name('updateCartQuantity');
 Route::get('/search', [ProductController::class, 'search'])->name('search');
+Route::get('/comments/{product_id}', [CommentController::class, 'getComments'])->name('comments.get');
+Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+
 
 // Checkout routes
 Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
