@@ -97,6 +97,7 @@
                                 @endforeach 
                             </select> 
                         </div>
+                        <input type="hidden" id="customer_id" name="customer_id" value="">
                         <button type="submit" id="confirm-button" class="btn btn-success w-100">Xác nhận thanh toán</button>
                     </div>
                 </div>
@@ -108,6 +109,12 @@
 </body>
 </html>
 <script> 
+    document.addEventListener('DOMContentLoaded', function() {
+        const customerId = localStorage.getItem('customer_id'); // Lấy customer_id từ localStorage
+        if (customerId) {
+            document.getElementById('customer_id').value = customerId;
+        }
+    });
     document.getElementById('voucher').addEventListener('change', calculateTotal);
     document.getElementById('shipping_method').addEventListener('change', calculateTotal);
     function calculateTotal() {

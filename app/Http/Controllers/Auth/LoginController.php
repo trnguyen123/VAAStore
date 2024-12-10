@@ -52,7 +52,7 @@ class LoginController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function login(Request $request)
-{
+    {
     $credentials = $request->only('username', 'password');
 
     // Kiểm tra thông tin đăng nhập

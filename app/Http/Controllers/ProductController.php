@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller{
     
-    public function index(){
-        return view('pages.product-detail');
-    }
     public function showAddProductForm(){
         return view('admin.add_product'); 
     }
@@ -54,7 +52,6 @@ class ProductController extends Controller{
 
     public function all_product(){
         $products = Product::all();
-        $products = Product::paginate(10);
         return view('admin.all_product', compact('products'));
     }
 
@@ -89,17 +86,21 @@ class ProductController extends Controller{
         return redirect()->route('admin.all_product')->with('success', 'Xóa sản phẩm thành công');
     }
 
-    public function showProductWithCategory($category_id){
-        // products để lấy tất cả sản phẩm có có cat_id trùng
-        $products = Product::where('category_id', $category_id)->get();
-        //  categories để lấy tất cả danh mục đổ ra menu
+    public function showProductWithCategory($category_id, Request $request) {
+        $sort = $request->input('sort', 'default');
+        $query = Product::where('category_id', $category_id);
+
+        if ($sort == 'price') {
+            $query->orderBy('product_price', 'asc');
+        }
+
+        $products = $query->paginate(9);
         $categories = Category::all(); 
-        // category để lấy danh mục hiện tại 
         $category = Category::find($category_id);
 
-        // Trả về với danh sách sản phẩm
-        return view('pages.product', compact('products','categories'));
+        return view('pages.product', compact('products', 'categories', 'category'));
     }
+
     //cần xem lại
     public function toggleFavorite(Request $request)
     {
@@ -130,17 +131,27 @@ class ProductController extends Controller{
     return view('pages.product_detail', compact('product', 'categories', 'relatedProducts'));
     }
 
-    public function allProduct(){
-        $products = Product::all();
+    public function allProduct(Request $request) {
+        $sort = $request->input('sort', 'default');
+        $query = Product::query();
+
+        if ($sort == 'price') {
+            $query->orderBy('product_price', 'asc');
+        }
+
+        $products = $query->paginate(9);
         $categories = Category::all(); 
-        return view('pages.product', compact('products','categories'));
-    }
+
+        return view('pages.product', compact('products', 'categories'));
+}
     public function search(Request $request)
     {
         $categories = Category::all();
-    $query = $request->input('query');
-    $products = Product::where('product_name', 'LIKE', "%{$query}%")->paginate(8);
+        $query = $request->input('query');
+        Log::info('Searching for: ' . $query); // Ghi log để kiểm tra
+        $products = Product::where('product_name', 'LIKE', "%{$query}%")->paginate(8);
 
-    return view('pages.search_results', compact('products','categories', 'query'));
+        return view('pages.search_results', compact('products','categories', 'query'));
     }
+
 }

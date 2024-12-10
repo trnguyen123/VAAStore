@@ -71,13 +71,23 @@
 <div class="row mt-4">
     <!-- Sidebar -->
     <div class="col-md-3 filter-sidebar">
-      <h5>Lọc sản phẩm</h5>
-      <button class="btn btn-outline-dark mb-2">Size</button>
-      <button class="btn btn-outline-dark mb-2">Màu sắc</button>
-      <button class="btn btn-outline-dark mb-2">Mức giá</button>
-      <button class="btn btn-outline-dark mb-2">Mức chiết khấu</button>
-      <button class="btn btn-outline-dark mb-2">Nâng cao</button>
-      <button class="btn btn-dark">Lọc</button>
+      <h5 class="mb-4">Lọc sản phẩm</h5>
+
+      <!-- Bộ lọc mức giá -->
+      <div class="filter-group mb-4">
+        <label class="filter-label">Mức giá</label>
+        <select class="form-select" id="filter-price">
+          <option value="all">Tất cả</option>
+          <option value="100.000-200.000">100.000₫ - 200.000₫</option>
+          <option value="200.000-300.000">200.000₫ - 300.000₫</option>
+          <option value="300.000-400.000">300.000₫ - 400.000₫</option>
+          <option value="400.000-500.000">400.000₫ - 500.000₫</option>
+          <option value="500.000-more">500.000₫ trở lên.</option>
+        </select><br>
+      </div>
+
+      <!-- Nút áp dụng -->
+      <button class="btn btn-dark w-100" id="apply-filters">Áp dụng lọc</button>
     </div>
 
     <!-- Product List -->
@@ -86,34 +96,84 @@
       <div class="d-flex justify-content-end mb-3">
         <label for="sort" class="me-2">Sắp xếp theo</label>
         <select id="sort" class="form-select w-auto">
-          <option value="default">Mặc định</option>
-          <option value="price">Giá</option>
+          <option value="default" {{ request('sort') == 'default' ? 'selected' : '' }}>Mặc định</option>
+          <option value="price" {{ request('sort') == 'price' ? 'selected' : '' }}>Giá</option>
         </select>
       </div>
-      <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="row row-cols-1 row-cols-md-3 g-4" id="product-list">
         @foreach ($products as $product)
         <div class="col">
-          <div class="product-card">
+          <div class="product-card" data-price="{{ $product->product_price }}">
             <div class="label">Special Price</div>
-              <a href="{{ route('products.detail', ['product_id' => $product->product_id]) }}" class="product-card-link">
-                <img src="{{ asset('public/' . $product->product_img) }}" alt="{{ $product->product_name }}">
-                <div class="product-name">{{ $product->product_name }}</div>
-              </a>
-              <div class="product-price">
-                {{ number_format($product->product_price, 0, ',', '.') }}đ
-                <span class="old-price">{{ number_format($product->product_old_price, 0, ',', '.') }}đ</span>
-              </div>
-              <div class="mt-2">
-                <button class="btn btn-outline-secondary add-to-favorite" onclick="addFavorite('{{ $product->product_id }}')">
-                  <i class="far fa-heart"></i>
-                </button>     
-                <button class="btn btn-dark add-to-cart-btn" data-product-id="{{ $product->product_id }}">
-                  <i class="fas fa-shopping-bag"></i>
-                </button>                
-              </div>
+            <a href="{{ route('products.detail', ['product_id' => $product->product_id]) }}" class="product-card-link">
+              <img src="{{ asset('public/' . $product->product_img) }}" alt="{{ $product->product_name }}">
+              <div class="product-name">{{ $product->product_name }}</div>
+            </a>
+            <div class="product-price">
+              {{ number_format($product->product_price, 0, ',', '.') }}đ
+              <span class="old-price">{{ number_format($product->product_old_price, 0, ',', '.') }}đ</span>
+            </div>
+            <div class="mt-2">
+              <button class="btn btn-outline-secondary add-to-favorite" onclick="addFavorite('{{ $product->product_id }}')">
+                <i class="far fa-heart"></i>
+              </button>     
+              <button class="btn btn-dark add-to-cart-btn" data-product-id="{{ $product->product_id }}">
+                <i class="fas fa-shopping-bag"></i>
+              </button>                
+            </div>
           </div>
         </div>
         @endforeach
+      </div>
+      {{ $products->links() }}
+      </div>    
+      <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                {{-- Previous Page Link --}}
+                @if ($products->onFirstPage())
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-angle-left"></i> <!-- Icon for "Previous" -->
+                        </span>
+                    </li>
+                @else
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $products->previousPageUrl() }}" rel="prev">
+                            <i class="fas fa-angle-left"></i> <!-- Icon for "Previous" -->
+                        </a>
+                    </li>
+                @endif
+
+                {{-- Page Number Links --}}
+                @foreach ($products->links()->elements[0] as $page => $url)
+                    @if ($page == $products->currentPage())
+                        <li class="page-item active">
+                            <span class="page-link">{{ $page }}</span> <!-- Active Page -->
+                        </li>
+                    @else
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $url }}">{{ $page }}</a> <!-- Other Pages -->
+                        </li>
+                    @endif
+                @endforeach
+
+                {{-- Next Page Link --}}
+                @if ($products->hasMorePages())
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $products->nextPageUrl() }}" rel="next">
+                            <i class="fas fa-angle-right"></i> <!-- Icon for "Next" -->
+                        </a>
+                    </li>
+                @else
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-angle-right"></i> <!-- Icon for "Next" -->
+                        </span>
+                    </li>
+                @endif
+            </ul>
+        </nav>
       </div>
     </div>
   </div>
@@ -252,6 +312,22 @@ document.querySelectorAll('.add-to-favorite').forEach(button => {
     .then(data => alert(data.message))
     .catch(error => console.error('Error:', error));
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  const sortSelect = document.getElementById('sort');
+  const sortOrder = localStorage.getItem('sortOrder');
+
+  if (sortOrder) {
+    sortSelect.value = sortOrder;
+  }
+
+  sortSelect.addEventListener('change', function() {
+    localStorage.setItem('sortOrder', this.value);
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('sort', this.value);
+    window.location.search = urlParams.toString();
+  });
+});
 
 </script>
 </html>

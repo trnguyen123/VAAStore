@@ -28,7 +28,6 @@ class CartController extends Controller
                 'quantity' => 1
             ];
         }
-
         // Lưu giỏ hàng vào session
         session(['cart' => $cartItems]);
 

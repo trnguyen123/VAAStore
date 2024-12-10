@@ -214,20 +214,25 @@ p {
 
 /* Tạo một khối chứa sản phẩm có thể di chuyển */
 .product-slider {
+    overflow: hidden; /* Giấu các sản phẩm vượt ra ngoài khung nhìn */
     position: relative;
-    overflow: hidden;
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .product-wrapper {
     display: flex;
-    transition: transform 0.5s ease; /* Đổi thành 0.5s để mượt mà hơn */
+    transition: transform 0.5s ease-in-out; /* Hiệu ứng trượt */
+    width: max-content;
 }
 
-.product-card {
-    flex: 0 0 20%; /* Chỉnh thẻ sản phẩm chiếm 1/5 chiều rộng của row */
-    margin: 10px; /* Khoảng cách giữa các thẻ */
-    box-sizing: border-box;
+
+.col-md-3 {
+    flex: 0 0 20%; /* Chia đều mỗi sản phẩm chiếm 20% khung nhìn (100% / 5 sản phẩm) */
+    max-width: 20%; /* Đảm bảo kích thước không vượt quá */
 }
+
 
 /* Các nút di chuyển qua lại */
 .prev, .next {

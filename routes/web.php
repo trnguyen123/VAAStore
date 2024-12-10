@@ -60,16 +60,15 @@ Route::get('/checkout/failure', function () {
     echo "<p>Đang chuyển hướng về trang chủ...</p>";
     echo "<script>setTimeout(function() { window.location.href = '/vaastore/home'; }, 1000);</script>";
 })->name('checkout.failure');
-
 Route::post('/vnpay/payment', [PaymentController::class, 'vnpay_payment'])->name('vnpay.payment');
-Route::get('paypal', [PayPalController::class, 'index'])->name('paypal');
 Route::match(['get', 'post'], 'paypal/payment', [PayPalController::class, 'payment'])->name('paypal.payment');
 Route::get('paypal/payment/success', [PayPalController::class, 'paymentSuccess'])->name('paypal.payment.success');
-Route::get('paypal/payment/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.payment/cancel');
+Route::get('paypal/payment/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.payment.cancel');
 
 // Route hiển thị danh sách yêu thích của người dùng
 Route::post('/favorites/add', [FavoriteController::class, 'addFavorite'])->name('fav.add');
-Route::get('/favorites/{customerId}', [FavoriteController::class, 'getFavorites'])->name('fav.get');
+Route::get('/favorites', [FavoriteController::class, 'showFavoritePage'])->name('fav.page');
+Route::post('/favorites', [FavoriteController::class, 'getFavorites'])->name('fav.get');
 Route::delete('/favorites/remove', [FavoriteController::class, 'removeFavorite'])->name('fav.del');
 
 

@@ -180,7 +180,7 @@
                     </div>
                 </div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <a href="/checkout" class="btn btn-primary">Thanh toán</a>
+                <a href={{ route('checkout') }} class="btn btn-primary">Thanh toán</a>
             </div>
         </div>
     </div>

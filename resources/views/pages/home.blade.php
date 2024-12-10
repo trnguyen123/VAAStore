@@ -67,7 +67,7 @@
         </a>
       </li>
       <li>
-          <a class="fa fa-heart" href="{{ url('/favorites') }}"></a> 
+        <a class="fa fa-heart" href="{{ route('fav.page') }}"></a> 
       </li>
     </div>
     </header>
