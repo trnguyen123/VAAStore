@@ -125,7 +125,6 @@
         </div>
         @endforeach
       </div>
-      {{ $products->links() }}
       </div>    
       <div class="d-flex justify-content-center mt-4">
         <nav>
