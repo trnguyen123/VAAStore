@@ -91,52 +91,56 @@ form {
 body a:hover {
     text-decoration: none;
 }
-.pagination {
+/* Tùy chỉnh phân trang */
+.custom-pagination {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
+    justify-content: center; /* Căn giữa phân trang */
+    list-style: none;
+    padding-left: 0;
+    margin: 20px 0;
 }
 
-.pagination ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-}
-
-.pagination li {
+.custom-pagination li {
     margin: 0 5px;
 }
 
-.pagination a {
+.custom-pagination li a {
+    display: block;
+    padding: 8px 15px;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     color: #333;
-    border-color: #ddd;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    font-size: 14px;
 }
 
-.pagination a::before {
-    content: none;
-}
-
-.pagination a:hover {
-    color: #007bff;
-    border-color: #007bff;
-}
-
-.pagination .disabled {
-    color: #ccc;
-    pointer-events: none;
-    cursor: default;
-}
-
-.pagination a svg {
-     width: 12px;
-     height: 12px;
-}
-
-/* Tùy chỉnh màu sắc của số trang đang hoạt động */
-.pagination a.active {
+.custom-pagination li a:hover {
     background-color: #007bff;
-    color: #fff;
+    color: white;
+}
+
+/* Kiểu cho trang đang chọn */
+.custom-pagination li.active a {
+    background-color: #007bff;
+    color: white;
+    pointer-events: none; /* Không cho phép click vào trang đang được chọn */
+}
+
+/* Kiểu cho các nút disabled (không thể click) */
+.custom-pagination li.disabled span {
+    background-color: #f1f1f1;
+    color: #ccc;
+    border-color: #ddd;
+    pointer-events: none;
+}
+
+/* Kiểu cho mũi tên */
+.custom-pagination li a {
+    font-size: 16px;
+}
+
+/* Thêm một chút hiệu ứng hover khi di chuột qua */
+.custom-pagination li a:hover {
+    transition: background-color 0.3s, color 0.3s;
 }

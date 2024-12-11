@@ -45,29 +45,27 @@
                 </tbody>        
             </table>
             @if ($orders->lastPage() > 1)
-    <ul class="custom-pagination">
-        @if ($orders->onFirstPage())
-            <li class="disabled"><span>&laquo;</span></li>
-        @else
-            <li><a href="{{ $orders->previousPageUrl() }}" rel="prev">&laquo;</a></li>
-        @endif
+                <ul class="custom-pagination">
+                    @if ($orders->onFirstPage())
+                        <li class="disabled"><span>&laquo;</span></li>
+                    @else
+                        <li><a href="{{ $orders->previousPageUrl() }}" rel="prev">&laquo;</a></li>
+                    @endif
 
-        @foreach ($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
-            <li class="{{ $page == $orders->currentPage() ? 'active' : '' }}">
-                <a href="{{ $url }}">{{ $page }}</a>
-            </li>
-        @endforeach
+                    @foreach ($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
+                        <li class="{{ $page == $orders->currentPage() ? 'active' : '' }}">
+                            <a href="{{ $url }}">{{ $page }}</a>
+                        </li>
+                    @endforeach
 
-        @if ($orders->hasMorePages())
-            <li><a href="{{ $orders->nextPageUrl() }}" rel="next">&raquo;</a></li>
-        @else
-            <li class="disabled"><span>&raquo;</span></li>
-        @endif
-    </ul>
-@endif
-
-        </div>
-
+                    @if ($orders->hasMorePages())
+                        <li><a href="{{ $orders->nextPageUrl() }}" rel="next">&raquo;</a></li>
+                    @else
+                        <li class="disabled"><span>&raquo;</span></li>
+                    @endif
+                </ul>
+            @endif
     </div>
+</div>
 </body>
 </html>

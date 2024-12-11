@@ -93,6 +93,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 Route::get('admin/payments', [PaymentController::class, 'index'])->name('admin.payments.index');
 Route::delete('admin/payments/{id}', [PaymentController::class, 'destroy'])->name('admin.payments.destroy');
+Route::get('/admin/payments/{payment}/edit', [PaymentController::class, 'edit'])->name('admin.payments.edit');
+Route::post('/admin/payments/{payment}', [PaymentController::class, 'update'])->name('admin.payments.update');
 Route::get('/all-customer', [CustomerController::class, 'index'])->name('admin.all_customer');
 Route::get('/customer/{id}/edit', [CustomerController::class, 'edit'])->name('admin.edit_customer');
 Route::put('/customer/{id}', [CustomerController::class, 'update'])->name('admin.update_customer');

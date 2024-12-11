@@ -38,12 +38,9 @@ class FavoriteController extends Controller
 
     public function getFavorites(Request $request)
     {
-        Log::info('Get Favorites Request Received', $request->all());
-
         $customer_id = $request->input('customer_id');
 
         if (!$customer_id) {
-            Log::warning('Customer ID missing in getFavorites');
             return response()->json(['success' => false, 'message' => 'Customer ID is missing'], 400);
         }
 
@@ -53,11 +50,8 @@ class FavoriteController extends Controller
                 ->get();
 
             if ($favorites->isEmpty()) {
-                Log::info('No favorites found', ['customer_id' => $customer_id]);
                 return response()->json(['success' => false, 'message' => 'No favorites found'], 404);
             }
-
-            Log::info('Favorites retrieved successfully', ['customer_id' => $customer_id, 'favorites_count' => $favorites->count()]);
             return response()->json([
                 'success' => true,
                 'favorites' => $favorites->map(function ($favorite) {
@@ -73,7 +67,6 @@ class FavoriteController extends Controller
                 }),
             ], 200);
         } catch (\Exception $e) {
-            Log::error('Error retrieving favorites', ['error' => $e->getMessage()]);
             return response()->json(['success' => false, 'message' => 'Failed to retrieve favorites'], 500);
         }
     }

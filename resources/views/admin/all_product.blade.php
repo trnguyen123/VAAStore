@@ -58,7 +58,27 @@
                     @endforeach
                 </tbody>        
             </table>
-            <div class="pagination pagination-sm justify-content-center"> {{ $products->links() }} </div>
+            @if ($products->lastPage() > 1)
+                <ul class="custom-pagination">
+                    @if ($products->onFirstPage())
+                        <li class="disabled"><span>&laquo;</span></li>
+                    @else
+                        <li><a href="{{ $products->previousPageUrl() }}" rel="prev">&laquo;</a></li>
+                    @endif
+
+                    @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                        <li class="{{ $page == $products->currentPage() ? 'active' : '' }}">
+                            <a href="{{ $url }}">{{ $page }}</a>
+                        </li>
+                    @endforeach
+
+                    @if ($products->hasMorePages())
+                        <li><a href="{{ $products->nextPageUrl() }}" rel="next">&raquo;</a></li>
+                    @else
+                        <li class="disabled"><span>&raquo;</span></li>
+                    @endif
+                </ul>
+            @endif
         </div>
     </div>
 </body>

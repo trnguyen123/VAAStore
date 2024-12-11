@@ -99,12 +99,7 @@
 	</section>
 </section>
 <script src="{{ asset('public/js/bootstrap.js') }}"></script>
-<script src="{{ asset('public/js/jquery.dcjqaccordion.2.7.js') }}"></script>
 <script src="{{ asset('public/js/scripts.js') }}"></script>
-<script src="{{ asset('public/js/jquery.slimscroll.js') }}"></script>
-<script src="{{ asset('public/js/jquery.nicescroll.js') }}"></script>
-<script src="{{ asset('public/js/jquery.scrollTo.js') }}"></script>
-
 <!-- morris JavaScript -->	
 <script>
 	// Prepare data for the chart 

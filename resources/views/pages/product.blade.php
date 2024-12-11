@@ -105,10 +105,10 @@
         <div class="col">
           <div class="product-card" data-price="{{ $product->product_price }}">
             <div class="label">Special Price</div>
-            <a href="{{ route('products.detail', ['product_id' => $product->product_id]) }}" class="product-card-link">
-              <img src="{{ asset('public/' . $product->product_img) }}" alt="{{ $product->product_name }}">
-              <div class="product-name">{{ $product->product_name }}</div>
-            </a>
+              <a href="{{ route('products.detail', ['product_id' => $product->product_id]) }}" class="product-card-link">
+                <img src="{{ asset('public/' . $product->product_img) }}" alt="{{ $product->product_name }}">
+                <div class="product-name">{{ $product->product_name }}</div>
+              </a>
             <div class="product-price">
               {{ number_format($product->product_price, 0, ',', '.') }}đ
               <span class="old-price">{{ number_format($product->product_old_price, 0, ',', '.') }}đ</span>
@@ -244,72 +244,71 @@
     </div>
 </footer>
 <script>
-  // Lấy thông tin từ localStorage
-  const fullName = localStorage.getItem('full_name');
+   // Lấy thông tin từ localStorage
+   const fullName = localStorage.getItem('full_name');
 
-  if (fullName) {
-      // Nếu đã đăng nhập, hiển thị dropdown user
-      document.getElementById('user-dropdown').style.display = 'block';
-      document.getElementById('user-full-name').innerText = fullName;
-  } else {
-      // Nếu chưa đăng nhập, hiển thị liên kết đăng nhập
-      document.getElementById('login-link').style.display = 'block';
+if (fullName) {
+    // Nếu đã đăng nhập, hiển thị dropdown user
+    document.getElementById('user-dropdown').style.display = 'block';
+    document.getElementById('user-full-name').innerText = fullName;
+} else {
+    // Nếu chưa đăng nhập, hiển thị liên kết đăng nhập
+    document.getElementById('login-link').style.display = 'block';
+}
+
+function clearLocalStorage() {
+  localStorage.removeItem('full_name');
+  localStorage.removeItem('customer_id');
+}
+const customerId = localStorage.getItem('customer_id');
+console.log('Customer ID:', customerId); // Log giá trị để kiểm tra
+
+fetch('/vaastore/profile', {
+  method: 'POST',
+  headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': csrfToken, 
+  },
+  body: JSON.stringify({ customer_id: customerId }),
+})
+  .then(response => response.json())
+  .then(data => console.log('Profile data:', data))
+  .catch(error => console.error('Error:', error));
+
+document.querySelectorAll('.add-to-favorite').forEach(button => {
+  button.addEventListener('click', function() {
+      const productId = this.getAttribute('data-product-id');  // Lấy productId từ data attribute
+      addFavorite(productId);  // Truyền productId như một chuỗi
+  });
+});
+
+function addFavorite(productId) {
+  const customerId = localStorage.getItem('customer_id');
+
+  if (!customerId) {
+      alert("Please log in to add favorites");
+      return;
   }
 
-  function clearLocalStorage() {
-    localStorage.removeItem('full_name');
-    localStorage.removeItem('customer_id');
-}
-  document.addEventListener('DOMContentLoaded', function () { 
-    const customerId = localStorage.getItem('customer_id');
-    console.log('Customer ID from localStorage:', customerId);
+  console.log("Sending data:", {
+      customer_id: customerId,
+      product_id: productId,  // productId là chuỗi
+  });
 
-    const profileLink = document.getElementById('profile-link');
-    if (customerId) {
-        const href = `/vaastore/profile/${customerId}`;
-        profileLink.setAttribute('href', href);
-        console.log('Setting href to:', href);
-    } else {
-        const href = '/vaastore/login';
-        profileLink.setAttribute('href', href);
-        console.log('Setting href to:', href);
-    }
-    console.log('Final Profile Link href:', profileLink.getAttribute('href'));
-});
-document.querySelectorAll('.add-to-favorite').forEach(button => {
-    button.addEventListener('click', function() {
-        const productId = this.getAttribute('data-product-id');  // Lấy productId từ data attribute
-        addFavorite(productId);  // Truyền productId như một chuỗi
-    });
-});
-
-  function addFavorite(productId) {
-    const customerId = localStorage.getItem('customer_id');
-
-    if (!customerId) {
-        alert("Please log in to add favorites");
-        return;
-    }
-
-    console.log("Sending data:", {
-        customer_id: customerId,
-        product_id: productId,  // productId là chuỗi
-    });
-
-    fetch('/vaastore/favorites/add', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        },
-        body: JSON.stringify({
-            customer_id: customerId,
-            product_id: productId,  // Đảm bảo product_id là chuỗi
-        }),
-    })
-    .then(response => response.json())
-    .then(data => alert(data.message))
-    .catch(error => console.error('Error:', error));
+  fetch('/vaastore/favorites/add', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      },
+      body: JSON.stringify({
+          customer_id: customerId,
+          product_id: productId,  // Đảm bảo product_id là chuỗi
+      }),
+  })
+  .then(response => response.json())
+  .then(data => alert(data.message))
+  .catch(error => console.error('Error:', error));
 }
 
 document.addEventListener('DOMContentLoaded', function() {

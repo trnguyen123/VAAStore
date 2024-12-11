@@ -3,6 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Payment;
+use App\Models\OrderDetail;
+use Illuminate\Support\Facades\Log;
+
+
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller{
     public function vnpay_payment(Request $request){
@@ -73,4 +79,65 @@ class PaymentController extends Controller{
             // vui lòng tham khảo thêm tại code demo
         
         }
+
+        // Hiển thị danh sách thanh toán
+        public function index(Request $request)
+        {
+            // Lấy danh sách thanh toán
+            $payments = Payment::orderBy('payment_date', 'desc')->paginate(10);
+        
+            // Nếu có tham số "show", lấy chi tiết thanh toán
+            $selectedPayment = null;
+            if ($request->has('show')) {
+                $selectedPayment = Payment::find($request->input('show'));
+            }
+        
+            return view('admin.payment', compact('payments', 'selectedPayment'));
+        }
+
+    // Hiển thị chi tiết một thanh toán
+    public function show($id)
+    {
+        $payment = Payment::join('orders', 'payments.order_id', '=', 'orders.order_id')
+            ->join('customers', 'orders.customer_id', '=', 'customers.customer_id')
+            ->select(
+                'payments.*',
+                'customers.full_name as customer_name',
+                'orders.order_id as order_id'
+            )
+            ->where('payments.payment_id', $id)
+            ->firstOrFail();
+        $totalAmount = OrderDetail::where('order_id', $payment->order_id)
+            ->sum(DB::raw('quantity * price'));
+        Log::info('Total Amount Calculated:', ['total_amount' => $totalAmount]);
+        $payment->total_amount = $totalAmount;
+        Log::info('Payment Total Amount Assigned:', [
+            'total_amount' => $payment->total_amount,
+        ]);
+        return view('admin.payment', compact('payment'));
+    }
+
+    // Hiển thị form sửa
+    public function edit($id)
+    {
+        $payment = Payment::find($id); // Tìm thanh toán theo ID
+        return view('admin.edit_payment', compact('payment'));
+    }
+
+    // Xử lý cập nhật
+    public function update(Request $request, $id)
+    {
+        $payment = Payment::find($id); // Tìm thanh toán theo ID
+        $payment->update($request->all()); // Cập nhật với dữ liệu từ form
+
+        return redirect()->route('admin.payments.index')->with('success', 'Thanh toán đã được cập nhật');
+    }
+
+    // Xóa một thanh toán
+    public function destroy($id)
+    {
+        $payment = Payment::findOrFail($id);
+        $payment->delete();
+        return redirect()->route('admin.payments.index')->with('success', 'Thanh toán đã được xóa.');
+    }
 }
