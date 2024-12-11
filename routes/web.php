@@ -88,12 +88,11 @@ Route::get('/admin/all-product', [ProductController::class, 'all_product'])->nam
 Route::get('admin/edit-product/{product_id}', [ProductController::class, 'edit'])->name('admin.products.edit');
 Route::put('admin/update-product/{product_id}', [ProductController::class, 'update'])->name('admin.update_product');
 Route::delete('admin/delete-product/{product_id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
-Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
-Route::get('/order/{id}', [OrderController::class, 'show'])->name('admin.order.show');
-Route::get('/order/edit/{id}', [OrderController::class, 'edit'])->name('admin.order.edit');
-Route::post('/order/update/{id}', [OrderController::class, 'update'])->name('admin.order.update');
-Route::get('/order/delete/{id}', [OrderController::class, 'destroy'])->name('admin.order.delete');
-
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('orders', OrderController::class);
+});
+Route::get('admin/payments', [PaymentController::class, 'index'])->name('admin.payments.index');
+Route::delete('admin/payments/{id}', [PaymentController::class, 'destroy'])->name('admin.payments.destroy');
 Route::get('/all-customer', [CustomerController::class, 'index'])->name('admin.all_customer');
 Route::get('/customer/{id}/edit', [CustomerController::class, 'edit'])->name('admin.edit_customer');
 Route::put('/customer/{id}', [CustomerController::class, 'update'])->name('admin.update_customer');

@@ -1,46 +1,73 @@
-@extends('layouts.admin')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="{{ asset('public/css/all_product.css') }}" rel='stylesheet' type='text/css' />
+    <title>Quản lý Đơn Hàng</title>
+</head>
+<body>
+    <div class="container-ct">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">Danh sách Đơn Hàng</h2>
+                <a href="{{ url('/admin/') }}" class="btn btn-warning">Quay lại</a>
+            </div>            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Mã Đơn Hàng</th>
+                        <th>Khách Hàng</th>
+                        <th>Ngày Đặt</th>
+                        <th>Trạng Thái</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($orders as $order)
+                        <tr>
+                            <td>{{ $order->order_id }}</td>
+                            <td>{{ $order->customer_id }}</td>
+                            <td>{{ $order->order_date }}</td>
+                            <td>{{ $order->order_status }}</td>
+                            <td>
+                                <a href="{{ route('admin.orders.show', $order->order_id) }}" class="btn btn-info">Xem</a>
+                                <a href="{{ route('admin.orders.edit', $order->order_id) }}" class="btn btn-warning">Sửa</a>
+                                <form action="{{ route('admin.orders.destroy', $order->order_id) }}" method="POST" style="display:inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>        
+            </table>
+            @if ($orders->lastPage() > 1)
+    <ul class="custom-pagination">
+        @if ($orders->onFirstPage())
+            <li class="disabled"><span>&laquo;</span></li>
+        @else
+            <li><a href="{{ $orders->previousPageUrl() }}" rel="prev">&laquo;</a></li>
+        @endif
 
-@section('title', 'Danh sách đơn hàng')
+        @foreach ($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
+            <li class="{{ $page == $orders->currentPage() ? 'active' : '' }}">
+                <a href="{{ $url }}">{{ $page }}</a>
+            </li>
+        @endforeach
 
-@section('content')
-<div class="container">
-    <h1 class="my-4">Danh sách đơn hàng</h1>
+        @if ($orders->hasMorePages())
+            <li><a href="{{ $orders->nextPageUrl() }}" rel="next">&raquo;</a></li>
+        @else
+            <li class="disabled"><span>&raquo;</span></li>
+        @endif
+    </ul>
+@endif
 
-    <!-- Hiển thị thông báo nếu có -->
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
         </div>
-    @endif
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>ID Đơn hàng</th>
-                <th>Tên khách hàng</th>
-                <th>Ngày tạo</th>
-                <th>Tổng tiền</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($orders as $order)
-                <tr>
-                    <td>{{ $order->order_id }}</td>
-                    <td>{{ $order->customer->full_name }}</td>
-                    <td>{{ $order->order_date->format('d/m/Y') }}</td>
-                    <td>{{ number_format($order->orderDetails->sum(fn($d) => $d->quantity * $d->price), 0, ',', '.') }} đ</td>
-                    <td>{{ $order->order_status }}</td>
-                    <td>
-                        <a href="{{ route('admin.order.show', $order->order_id) }}" class="btn btn-info btn-sm">Xem</a>
-                        <a href="{{ route('admin.order.edit', $order->order_id) }}" class="btn btn-primary btn-sm">Chỉnh sửa</a>
-                        <a href="{{ route('admin.order.delete', $order->order_id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">Xóa</a>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-</div>
-@endsection
+    </div>
+</body>
+</html>
