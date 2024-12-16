@@ -1,4 +1,3 @@
-/* Resetting and global styles */
 * {
     margin: 0;
     padding: 0;
@@ -16,21 +15,22 @@ a {
     color: #000;
 }
 
-/* Logo */
 .logo {
     width: 50px;
     height: auto;
 }
 
-/* Header */
 header {
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 30px;
+    padding: 12px 50px;
     height: 70px;
-    background-color: white;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
 
 .menu {
@@ -43,18 +43,19 @@ header {
     padding: 0;
     margin: 0;
     list-style: none;
-    gap: 20px;
 }
 
 .menu > li {
     margin: 0;
 }
 
-.menu > ul > li > a {
-    font-size: 16px;
+.menu > li > a {
+    font-size: 15px;
     font-weight: bold;
-    color: #333;
-    transition: color 0.3s ease;
+    display: block;
+    line-height: 20px;
+    text-decoration: none;
+    color: inherit;
 }
 
 .menu > li > a:hover {
@@ -62,6 +63,49 @@ header {
     text-decoration: underline;
 }
 
+.others {
+    flex: 2;
+    display: flex;
+    align-items: center; 
+}
+
+.others > li {
+    padding: 0 12px;
+    position: relative; 
+}
+
+.others > li.search {
+    flex: 2;
+    display: flex;
+    align-items: center;
+}
+
+.others > li.search input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.others > li.search input:focus {
+    border-color: #999;
+}
+
+.others > li.search input::placeholder {
+    color: #999;
+    opacity: 1;
+}
+
+.others > li.search i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    cursor: pointer;
+}
 /* Dropdown menu */
 .dropdown {
     position: relative;
@@ -221,7 +265,7 @@ p {
 .product-card img {
     width: 100%;
     height: 200px;
-    object-fit: cover;
+    object-fit: scale-down; /* Hiển thị ảnh nhỏ lại trong khung */
     border-radius: 5px;
 }
 

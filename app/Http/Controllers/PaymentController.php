@@ -95,9 +95,10 @@ class PaymentController extends Controller{
             return view('admin.payment', compact('payments', 'selectedPayment'));
         }
 
-    // Hiển thị chi tiết một thanh toán
     public function show($id)
     {
+        dd('Reached here!');
+        Log::info('Start retrieving payment data', ['id' => $id]);
         $payment = Payment::join('orders', 'payments.order_id', '=', 'orders.order_id')
             ->join('customers', 'orders.customer_id', '=', 'customers.customer_id')
             ->select(
@@ -107,13 +108,25 @@ class PaymentController extends Controller{
             )
             ->where('payments.payment_id', $id)
             ->firstOrFail();
+
+        // Tính tổng tiền từ bảng order_details
         $totalAmount = OrderDetail::where('order_id', $payment->order_id)
-            ->sum(DB::raw('quantity * price'));
+            ->sum(DB::raw('COALESCE(quantity, 0) * COALESCE(price, 0)')); // Sử dụng COALESCE để tránh lỗi giá trị null
+
+            
+        // Ghi log thông tin tổng tiền đã tính
         Log::info('Total Amount Calculated:', ['total_amount' => $totalAmount]);
+
         $payment->total_amount = $totalAmount;
+
+        // Ghi log khi total_amount được gán
         Log::info('Payment Total Amount Assigned:', [
+            'payment_id' => $payment->payment_id,
             'total_amount' => $payment->total_amount,
         ]);
+
+        dd($payment, $totalAmount);
+
         return view('admin.payment', compact('payment'));
     }
 

@@ -44,26 +44,26 @@
             </tbody>   
         </div>
         @if ($payments->lastPage() > 1)
-                <ul class="custom-pagination">
-                    @if ($payments->onFirstPage())
-                        <li class="disabled"><span>&laquo;</span></li>
-                    @else
-                        <li><a href="{{ $payments->previousPageUrl() }}" rel="prev">&laquo;</a></li>
-                    @endif
+            <ul class="custom-pagination">
+                @if ($payments->onFirstPage())
+                    <li class="disabled"><span>&laquo;</span></li>
+                @else
+                    <li><a href="{{ $payments->previousPageUrl() }}" rel="prev">&laquo;</a></li>
+                @endif
 
-                    @foreach ($payments->getUrlRange(1, $payments->lastPage()) as $page => $url)
-                        <li class="{{ $page == $payments->currentPage() ? 'active' : '' }}">
-                            <a href="{{ $url }}">{{ $page }}</a>
-                        </li>
-                    @endforeach
+                @foreach ($payments->getUrlRange(1, $payments->lastPage()) as $page => $url)
+                    <li class="{{ $page == $payments->currentPage() ? 'active' : '' }}">
+                        <a href="{{ $url }}">{{ $page }}</a>
+                    </li>
+                @endforeach
 
-                    @if ($payments->hasMorePages())
-                        <li><a href="{{ $payments->nextPageUrl() }}" rel="next">&raquo;</a></li>
-                    @else
-                        <li class="disabled"><span>&raquo;</span></li>
-                    @endif
-                </ul>
-            @endif     
+                @if ($payments->hasMorePages())
+                    <li><a href="{{ $payments->nextPageUrl() }}" rel="next">&raquo;</a></li>
+                @else
+                    <li class="disabled"><span>&raquo;</span></li>
+                @endif
+            </ul>
+        @endif     
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
     </html>
