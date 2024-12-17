@@ -50,6 +50,8 @@ Route::post('/updateCartQuantity', [CartController::class, 'updateCartQuantity']
 Route::get('/search', [ProductController::class, 'search'])->name('search');
 Route::get('/comments/{product_id}', [CommentController::class, 'getComments'])->name('comments.get');
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::get('/products/filter', [ProductController::class, 'filterProducts'])->name('products.filter');
+
 
 
 // Checkout routes

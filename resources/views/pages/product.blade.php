@@ -74,17 +74,19 @@
       <h5 class="mb-4">Lọc sản phẩm</h5>
 
       <!-- Bộ lọc mức giá -->
-      <div class="filter-group mb-4">
-        <label class="filter-label">Mức giá</label>
-        <select class="form-select" id="filter-price">
-          <option value="all">Tất cả</option>
-          <option value="100.000-200.000">100.000₫ - 200.000₫</option>
-          <option value="200.000-300.000">200.000₫ - 300.000₫</option>
-          <option value="300.000-400.000">300.000₫ - 400.000₫</option>
-          <option value="400.000-500.000">400.000₫ - 500.000₫</option>
-          <option value="500.000-more">500.000₫ trở lên.</option>
-        </select><br>
-      </div>
+      <form action="{{ route('products.filter') }}" method="GET">
+        <div class="filter-group mb-4">
+            <label class="filter-label">Mức giá</label>
+            <select class="form-select" name="filter_price" id="filter-price" onchange="this.form.submit()">
+                <option value="all">Tất cả</option>
+                <option value="100.000-200.000">100.000₫ - 200.000₫</option>
+                <option value="200.000-300.000">200.000₫ - 300.000₫</option>
+                <option value="300.000-400.000">300.000₫ - 400.000₫</option>
+                <option value="400.000-500.000">400.000₫ - 500.000₫</option>
+                <option value="500.000-more">500.000₫ trở lên.</option>
+            </select>
+        </div>
+      </form>      
 
       <!-- Nút áp dụng -->
       <button class="btn btn-dark w-100" id="apply-filters">Áp dụng lọc</button>
@@ -125,51 +127,51 @@
         </div>
         @endforeach
       </div>
-        <div class="d-flex justify-content-center mt-4">
-          <nav>
-              <ul class="pagination">
-                  {{-- Previous Page Link --}}
-                  @if ($products->onFirstPage())
-                      <li class="page-item disabled">
-                          <span class="page-link">
-                              <i class="fas fa-angle-left"></i> <!-- Icon for "Previous" -->
-                          </span>
-                      </li>
-                  @else
-                      <li class="page-item">
-                          <a class="page-link" href="{{ $products->previousPageUrl() }}&sort={{ request('sort', 'default') }}" rel="prev">
-                              <i class="fas fa-angle-left"></i> <!-- Icon for "Previous" -->
-                          </a>
-                      </li>
-                  @endif
-      
-                  {{-- Page Number Links --}}
-                  @foreach ($products->links()->elements[0] as $page => $url)
-                      @if ($page == $products->currentPage())
-                          <li class="page-item active">
-                              <span class="page-link">{{ $page }}</span> <!-- Active Page -->
-                          </li>
-                      @else
-                          <li class="page-item">
-                              <a class="page-link" href="{{ $url }}&sort={{ request('sort', 'default') }}">{{ $page }}</a> <!-- Other Pages -->
-                          </li>
-                      @endif
-                  @endforeach
-      
-                  {{-- Next Page Link --}}
-                  @if ($products->hasMorePages())
-                      <li class="page-item">
-                          <a class="page-link" href="{{ $products->nextPageUrl() }}&sort={{ request('sort', 'default') }}" rel="next">
-                              <i class="fas fa-angle-right"></i> <!-- Icon for "Next" -->
-                          </a>
-                      </li>
-                  @else
-                      <li class="page-item disabled">
-                          <span class="page-link">
-                              <i class="fas fa-angle-right"></i> <!-- Icon for "Next" -->
-                          </span>
-                      </li>
-                  @endif
+      <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                {{-- Previous Page Link --}}
+                @if ($products->onFirstPage())
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-angle-left"></i> <!-- Icon for "Previous" -->
+                        </span>
+                    </li>
+                @else
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $products->previousPageUrl() }}&filter_price={{ request('filter_price', 'all') }}&sort={{ request('sort', 'default') }}" rel="prev">
+                            <i class="fas fa-angle-left"></i> <!-- Icon for "Previous" -->
+                        </a>
+                    </li>
+                @endif
+    
+                {{-- Page Number Links --}}
+                @foreach ($products->links()->elements[0] as $page => $url)
+                    @if ($page == $products->currentPage())
+                        <li class="page-item active">
+                            <span class="page-link">{{ $page }}</span> <!-- Active Page -->
+                        </li>
+                    @else
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $url }}&filter_price={{ request('filter_price', 'all') }}&sort={{ request('sort', 'default') }}">{{ $page }}</a> <!-- Other Pages -->
+                        </li>
+                    @endif
+                @endforeach
+    
+                {{-- Next Page Link --}}
+                @if ($products->hasMorePages())
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $products->nextPageUrl() }}&filter_price={{ request('filter_price', 'all') }}&sort={{ request('sort', 'default') }}" rel="next">
+                            <i class="fas fa-angle-right"></i> <!-- Icon for "Next" -->
+                        </a>
+                    </li>
+                @else
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-angle-right"></i> <!-- Icon for "Next" -->
+                        </span>
+                    </li>
+                @endif
               </ul>
           </nav>
       </div>    

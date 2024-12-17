@@ -153,5 +153,31 @@ class ProductController extends Controller{
 
         return view('pages.search_results', compact('products','categories', 'query'));
     }
+    public function filterProducts(Request $request)
+    {
+        $categories = Category::all(); 
+        $priceRange = $request->input('filter_price'); // Lấy giá trị từ dropdown
+        $products = Product::query();
+        $sort = $request->input('sort', 'default');
+
+        if ($priceRange && $priceRange != 'all') {
+            if ($priceRange == '500.000-more') {
+                $products = $products->where('product_price', '>=', 500000);
+            } else {
+                // Tách mức giá ra
+                [$min, $max] = explode('-', $priceRange);
+                $products = $products->whereBetween('product_price', [(int)$min * 1000, (int)$max * 1000]);
+            }
+        }
+        if ($sort == 'price') {
+            $products = $products->orderBy('product_price', 'asc');
+        } elseif ($sort == 'price-desc') {
+            $products = $products->orderBy('product_price', 'desc');
+        }
+
+        $products = $products->paginate(9); // Hiển thị 9 sản phẩm mỗi trang
+        return view('pages.product', compact('products','categories')); // Trả về view với danh sách sản phẩm đã lọc
+    }
+
 
 }
